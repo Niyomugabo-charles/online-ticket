@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - EventTicketing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="dark-mode.css">
+    
+    <style>
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 150px 0 80px;
+        }
+        .faq-section {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .faq-category {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .faq-category h3 {
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .faq-category h3 i {
+            font-size: 1.5rem;
+        }
+        .faq-item {
+            border-bottom: 1px solid #f8f9fa;
+            padding: 1rem 0;
+        }
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+        .faq-question {
+            background: none;
+            border: none;
+            padding: 0;
+            width: 100%;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: color 0.3s ease;
+        }
+        .faq-question:hover {
+            color: #667eea;
+        }
+        .faq-question i {
+            transition: transform 0.3s ease;
+        }
+        .faq-question[aria-expanded="true"] i {
+            transform: rotate(180deg);
+        }
+        .faq-answer {
+            padding-top: 1rem;
+            color: #666;
+            line-height: 1.6;
+        }
+        .search-box {
+            background: white;
+            border-radius: 50px;
+            padding: 1rem 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 3rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .search-box input {
+            border: none;
+            outline: none;
+            flex: 1;
+            font-size: 1rem;
+        }
+        .search-box i {
+            color: #667eea;
+        }
+        .contact-support {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+        .contact-support h3 {
+            margin-bottom: 1rem;
+        }
+        .contact-support p {
+            margin-bottom: 1.5rem;
+        }
+        .highlight {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div id="preloader"><div class="loader"><div class="loader-spinner"></div></div></div>
+    
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-ticket-alt brand-icon"></i>
+                <span class="brand-text">Event<span class="brand-highlight">Ticketing</span></span>
+            </a>
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/events">Events</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contact">Contact</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav" id="nav-links"></ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <div class="text-center text-white" data-aos="fade-up">
+                <h1 class="display-4 fw-bold mb-4">Frequently Asked Questions</h1>
+                <p class="lead">Find answers to common questions about EventTicketing</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Content -->
+    <section class="py-5">
+        <div class="container">
+            <!-- Search Box -->
+            <div class="search-box" data-aos="fade-up">
+                <i class="fas fa-search"></i>
+                <input type="text" id="faqSearch" placeholder="Search for answers...">
+            </div>
+
+            <div class="faq-section">
+                <!-- Getting Started -->
+                <div class="faq-category" data-aos="fade-up" data-aos-delay="100">
+                    <h3><i class="fas fa-rocket"></i> Getting Started</h3>
+                    
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                            How do I create an account?
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="collapse" id="faq1">
+                            <div class="faq-answer">
+                                Creating an account is easy! Click the "Sign Up" button in the top navigation, fill in your details including name, email, and password, and verify your email address. Once verified, you can start exploring events and purchasing tickets.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                            Is EventTicketing free to use?
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="collapse" id="faq2">
+                            <div class="faq-answer">
+                                Yes! EventTicketing is free for users to browse events and create accounts. We only charge a small service fee on ticket purchases, which is clearly displayed during checkout. Event organizers have different pricing tiers based on their needs.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                            How do I become an event organizer?
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="collapse" id="faq3">
+                            <div class="faq-answer">
+                                To become an event organizer, you need to submit an application through your account dashboard. We'll review your application and typically approve it within 1-2 business days. Once approved, you can start creating and managing events.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tickets & Purchases -->
+                <div class="faq-category" data-aos="fade-up" data-aos-delay="200">
+                    <h3><i class="fas fa-ticket-alt"></i> Tickets & Purchases</h3>
+                    
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                            How do I purchase tickets?
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="collapse" id="faq4">
+                            <div class="faq-answer">
+                                Browse events on our platform, select the event you want to attend, choose your ticket type and quantity, and proceed to checkout. You'll need to create an account or log in, provide payment information, and confirm your purchase. Tickets will be sent to your email.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                            What payment methods do you accept?
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="collapse" id="faq5">
+                            <div class="faq-answer">
+                                We accept all major credit cards (Visa, Mastercard, American Express, Discover), debit cards, PayPal, Apple Pay, and Google Pay. All payments are processed securely through our trusted payment partners.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">
+                            Can I get a refund for my tickets?
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="collapse" id="faq6">
+                            <div class="faq-answer">
+                                Refund policies vary by event and are set by the event organizer. Check the event details page for specific refund information. Some events offer refunds up to a certain date, while others may be non-refundable. Service fees are always non-refundable.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" data-bs-toggle="collapse" data-bs-target="#faq7">
+                            How do I access my tickets?
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="collapse" id="faq7">
+                            <div class="faq-answer">
+                                After purchase, you'll receive an email confirmation with your tickets. You can also access your tickets anytime through your account dashboard under "My Tickets." Tickets are available as both digital QR codes and printable PDFs.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Events -->
+                <div class="faq-category" data-aos="fade-up" data-aos-delay="300">
+                    <h3><i class="fas fa-calendar-alt"></i> Events</h3>
+                    
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" data-bs-toggle="collapse" data-bs-target="#faq8">
+                            How do I find events?
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="collapse" id="faq8">
+                            <div class="faq-answer">
+                                You can find events by browsing our events page, using the search bar to look for specific events or artists, filtering by category, date, location, or price range. We also provide personalized recommendations based on your interests and past purchases.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" data-bs-toggle="collapse" data-bs-target="#faq9">
+                            How do I create an event?
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="collapse" id="faq9">
+                            <div class="faq-answer">
+                                Once you're approved as an organizer, go to your dashboard and click "Create Event." Fill in event details including title, description, date, time, location, ticket types, and prices. Your event will be reviewed and typically published within 24 hours.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" data-bs-toggle="collapse" data-bs-target="#faq10">
+                            Can I promote my event on EventTicketing?
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="collapse" id="faq10">
+                            <div class="faq-answer">
+                                Yes! We offer various promotional tools including featured listings, social media promotion, email marketing to interested users, and analytics to track your event's performance. Contact our support team for custom promotion packages.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account & Security -->
+                <div class="faq-category" data-aos="fade-up">
+                    <h3><i class="fas fa-user-shield"></i> Account & Security</h3>
+                    
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" data-bs-toggle="collapse" data-bs-target="#faq11">
+                            How do I reset my password?
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="collapse" id="faq11">
+                            <div class="faq-answer">
+                                Click "Forgot Password" on the login page, enter your email address, and we'll send you a password reset link. Follow the link in the email to create a new password. The link expires after 24 hours for security reasons.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" data-bs-toggle="collapse" data-bs-target="#faq12">
+                            Is my personal information secure?
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="collapse" id="faq12">
+                            <div class="faq-answer">
+                                Absolutely! We use industry-standard encryption and security measures to protect your personal information. All payment data is processed through secure, PCI-compliant payment processors. We never store credit card information on our servers.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" data-bs-toggle="collapse" data-bs-target="#faq13">
+                            How do I delete my account?
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="collapse" id="faq13">
+                            <div class="faq-answer">
+                                You can delete your account from your account settings. Please note that this action is permanent and cannot be undone. Any active tickets or pending transactions will be canceled. We recommend downloading your data before deleting your account.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Technical Issues -->
+                <div class="faq-category" data-aos="fade-up">
+                    <h3><i class="fas fa-cog"></i> Technical Issues</h3>
+                    
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" data-bs-toggle="collapse" data-bs-target="#faq14">
+                            Why can't I see my tickets?
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="collapse" id="faq14">
+                            <div class="faq-answer">
+                                First, check that you're logged into the correct account. If you still can't see your tickets, check your email for the purchase confirmation. If the issue persists, contact our support team with your order number and we'll help resolve it.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" data-bs-toggle="collapse" data-bs-target="#faq15">
+                            My payment failed, what should I do?
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="collapse" id="faq15">
+                            <div class="faq-answer">
+                                Check that your payment information is correct and that you have sufficient funds. If the issue persists, try a different payment method or contact your bank. Sometimes payments fail due to security blocks - you may need to contact your bank to authorize the transaction.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" type="button" data-bs-toggle="collapse" data-bs-target="#faq16">
+                            The website is loading slowly, what can I do?
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="collapse" id="faq16">
+                            <div class="faq-answer">
+                                Try clearing your browser cache and cookies, ensure you have a stable internet connection, and try using a different browser. If the problem persists, check our status page for any known issues or contact our technical support team.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Support -->
+            <div class="contact-support" data-aos="fade-up">
+                <h3>Still have questions?</h3>
+                <p>Our support team is here to help you 24/7</p>
+                <div class="d-flex gap-3 justify-content-center">
+                    <a href="/contact" class="btn btn-light">
+                        <i class="fas fa-envelope me-2"></i>Contact Support
+                    </a>
+                    <a href="/help" class="btn btn-outline-light">
+                        <i class="fas fa-book me-2"></i>Help Center
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="footer-brand">
+                        <i class="fas fa-ticket-alt"></i>
+                        <span>Event<span>Ticketing</span></span>
+                    </div>
+                    <p class="footer-text">Your ultimate destination for discovering and booking amazing events.</p>
+                    <div class="footer-social">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5>Quick Links</h5>
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/events">Events</a></li>
+                        <li><a href="/register">Register</a></li>
+                        <li><a href="/login">Login</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5>Support</h5>
+                    <ul>
+                        <li><a href="/help">Help Center</a></li>
+                        <li><a href="/faq">FAQs</a></li>
+                        <li><a href="/terms">Terms of Service</a></li>
+                        <li><a href="/privacy">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <h5>Newsletter</h5>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your email">
+                        <button><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 EventTicketing. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <button id="backToTop" class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="api.js"></script>
+    <script src="auth.js"></script>
+    <script src="utils.js"></script>
+    <script src="js/navigation-enhancer.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize AOS
+            AOS.init({
+                duration: 800,
+                once: true
+            });
+
+            // FAQ Search functionality
+            const searchInput = document.getElementById('faqSearch');
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                
+                faqItems.forEach(item => {
+                    const question = item.querySelector('.faq-question').textContent.toLowerCase();
+                    const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
+                    
+                    if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+                        item.style.display = 'block';
+                        
+                        // Highlight search term
+                        if (searchTerm.length > 2) {
+                            highlightSearchTerm(item, searchTerm);
+                        }
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+
+                // Show/hide categories based on visible items
+                document.querySelectorAll('.faq-category').forEach(category => {
+                    const visibleItems = category.querySelectorAll('.faq-item[style="display: block;"]');
+                    category.style.display = visibleItems.length > 0 ? 'block' : 'none';
+                });
+            });
+
+            function highlightSearchTerm(element, term) {
+                // Simple highlight implementation
+                // In production, you'd want a more sophisticated solution
+                const question = element.querySelector('.faq-question');
+                const originalText = question.textContent;
+                const regex = new RegExp(`(${term})`, 'gi');
+                question.innerHTML = originalText.replace(regex, '<span class="highlight">$1</span>');
+            }
+
+            // Clear highlights when search is cleared
+            searchInput.addEventListener('input', (e) => {
+                if (e.target.value === '') {
+                    document.querySelectorAll('.faq-question').forEach(question => {
+                        question.innerHTML = question.textContent;
+                    });
+                }
+            });
+
+            // Smooth scroll to FAQ categories
+            document.querySelectorAll('.faq-category h3').forEach(header => {
+                header.style.cursor = 'pointer';
+                header.addEventListener('click', () => {
+                    header.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

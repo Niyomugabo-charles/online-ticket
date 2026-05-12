@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Center - EventTicketing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="dark-mode.css">
+    
+    <style>
+        .help-container {
+            padding-top: 100px;
+            min-height: 100vh;
+            background: #f8f9fa;
+        }
+        
+        .help-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4rem 0;
+            margin-bottom: 3rem;
+        }
+        
+        .search-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 3rem;
+        }
+        
+        .search-box {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .search-box input {
+            padding: 15px 50px 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            font-size: 1.125rem;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .search-box button {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .search-box button:hover {
+            transform: translateY(-50%) scale(1.05);
+        }
+        
+        .category-pills {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+        
+        .category-pill {
+            background: white;
+            color: #667eea;
+            padding: 8px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 2px solid #667eea;
+            font-weight: 500;
+        }
+        
+        .category-pill:hover,
+        .category-pill.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .faq-section {
+            margin-bottom: 3rem;
+        }
+        
+        .faq-item {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .faq-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+        }
+        
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .faq-question i {
+            transition: transform 0.3s ease;
+            color: #667eea;
+        }
+        
+        .faq-item.expanded .faq-question i {
+            transform: rotate(180deg);
+        }
+        
+        .faq-answer {
+            margin-top: 1rem;
+            color: #666;
+            line-height: 1.6;
+            display: none;
+        }
+        
+        .faq-item.expanded .faq-answer {
+            display: block;
+        }
+        
+        .help-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .help-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .help-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .help-card-icon {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        .contact-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 3rem;
+            text-align: center;
+        }
+        
+        .contact-methods {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .contact-method {
+            background: rgba(255,255,255,0.1);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .contact-method:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+        
+        @media (max-width: 768px) {
+            .help-header {
+                padding: 2rem 0;
+            }
+            
+            .category-pills {
+                gap: 0.5rem;
+            }
+            
+            .category-pill {
+                font-size: 0.875rem;
+                padding: 6px 15px;
+            }
+            
+            .contact-methods {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="preloader"><div class="loader"><div class="loader-spinner"></div></div></div>
+    
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-ticket-alt brand-icon"></i>
+                <span class="brand-text">Event<span class="brand-highlight">Ticketing</span></span>
+            </a>
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/events">Events</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/help">Help</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav" id="nav-links"></ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="help-container">
+        <!-- Header -->
+        <div class="help-header">
+            <div class="container text-center">
+                <h1 class="display-4 fw-bold mb-3" data-aos="fade-up">Help Center</h1>
+                <p class="lead" data-aos="fade-up" data-aos-delay="100">
+                    Find answers to common questions and get the support you need
+                </p>
+            </div>
+        </div>
+        
+        <div class="container">
+            <!-- Search Section -->
+            <div class="search-section" data-aos="fade-up" data-aos-delay="200">
+                <h3 class="text-center mb-4">How can we help you?</h3>
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search for help topics...">
+                    <button onclick="searchHelp()">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                
+                <div class="category-pills">
+                    <a href="#" class="category-pill active" onclick="filterCategory('all')">All Topics</a>
+                    <a href="#" class="category-pill" onclick="filterCategory('account')">Account</a>
+                    <a href="#" class="category-pill" onclick="filterCategory('tickets')">Tickets</a>
+                    <a href="#" class="category-pill" onclick="filterCategory('events')">Events</a>
+                    <a href="#" class="category-pill" onclick="filterCategory('payment')">Payment</a>
+                    <a href="#" class="category-pill" onclick="filterCategory('technical')">Technical</a>
+                </div>
+            </div>
+            
+            <!-- Quick Help Cards -->
+            <div class="help-cards" data-aos="fade-up" data-aos-delay="300">
+                <div class="help-card">
+                    <i class="fas fa-book help-card-icon"></i>
+                    <h4>User Guide</h4>
+                    <p>Complete guide on how to use EventTicketing platform</p>
+                    <a href="#" class="btn btn-primary mt-3">View Guide</a>
+                </div>
+                <div class="help-card">
+                    <i class="fas fa-video help-card-icon"></i>
+                    <h4>Video Tutorials</h4>
+                    <p>Step-by-step video guides for common tasks</p>
+                    <a href="#" class="btn btn-primary mt-3">Watch Videos</a>
+                </div>
+                <div class="help-card">
+                    <i class="fas fa-comments help-card-icon"></i>
+                    <h4>Live Support</h4>
+                    <p>Chat with our support team in real-time</p>
+                    <a href="#" class="btn btn-primary mt-3">Start Chat</a>
+                </div>
+            </div>
+            
+            <!-- FAQ Section -->
+            <div class="faq-section" data-aos="fade-up" data-aos-delay="400">
+                <h2 class="text-center mb-4">Frequently Asked Questions</h2>
+                
+                <div id="faqContainer">
+                    <!-- Account FAQs -->
+                    <div class="faq-item" data-category="account">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>How do I create an account?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            Creating an account is easy! Click on the "Register" button in the top navigation, fill in your details including name, email, and password, then click "Create Account". You'll receive a verification email - click the link in that email to activate your account.
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item" data-category="account">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>I forgot my password. How do I reset it?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            Go to the login page and click "Forgot Password". Enter your registered email address, and we'll send you a password reset link. The link expires in 30 minutes for security reasons.
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item" data-category="account">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>How do I become an event organizer?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            After creating an account, you can apply to become an organizer by filling out the organizer application form. Go to your dashboard and look for the "Become an Organizer" option. Our team will review your application within 3-5 business days.
+                        </div>
+                    </div>
+                    
+                    <!-- Ticket FAQs -->
+                    <div class="faq-item" data-category="tickets">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>How do I buy tickets for an event?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            Browse events on our platform, click on the event you're interested in, select your preferred ticket category and quantity, then click "Reserve Tickets". You'll have 15 minutes to complete the purchase before the reservation expires.
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item" data-category="tickets">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>What is a ticket reservation?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            A reservation holds tickets for you for 15 minutes while you complete the checkout process. This prevents others from buying the same tickets while you're making your payment decision.
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item" data-category="tickets">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>How do I access my e-tickets?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            After purchasing tickets, you can access them from your dashboard. Each ticket has a unique QR code that you can show at the venue entrance. You can also download your tickets as PDF files.
+                        </div>
+                    </div>
+                    
+                    <!-- Event FAQs -->
+                    <div class="faq-item" data-category="events">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>How do I search for events?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            Use the search bar on the homepage or events page to search by event name, artist, or venue. You can also filter events by category, price range, date, and location using the filter options.
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item" data-category="events">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>Can I get a refund for my tickets?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            Refund policies vary by event organizer. Check the event details page for the specific refund policy. Some events offer full refunds up to a certain date, while others may have no refund policy.
+                        </div>
+                    </div>
+                    
+                    <!-- Payment FAQs -->
+                    <div class="faq-item" data-category="payment">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>What payment methods do you accept?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            We accept all major credit cards (Visa, Mastercard, American Express), debit cards, and PayPal. All payments are processed securely through our payment partners.
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item" data-category="payment">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>Is my payment information secure?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            Yes! We use industry-standard SSL encryption to protect your payment information. We never store your credit card details on our servers - all payment processing is handled by secure third-party payment processors.
+                        </div>
+                    </div>
+                    
+                    <!-- Technical FAQs -->
+                    <div class="faq-item" data-category="technical">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>Why isn't my QR code scanning?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            Make sure your phone screen brightness is turned up and the QR code is clearly visible. If it still doesn't work, you can show your order confirmation email or the ticket details from your dashboard as an alternative.
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item" data-category="technical">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <span>The website is loading slowly. What can I do?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            Try clearing your browser cache and cookies, or try using a different browser. Make sure you have a stable internet connection. If problems persist, our technical team may be performing maintenance.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Contact Section -->
+            <div class="contact-section" data-aos="fade-up" data-aos-delay="500">
+                <h3>Still need help?</h3>
+                <p class="mb-0">Our support team is here to assist you</p>
+                
+                <div class="contact-methods">
+                    <a href="mailto:support@eventticketing.com" class="contact-method">
+                        <i class="fas fa-envelope me-2"></i> Email Support
+                    </a>
+                    <a href="tel:+1234567890" class="contact-method">
+                        <i class="fas fa-phone me-2"></i> Phone Support
+                    </a>
+                    <a href="#" class="contact-method" onclick="startLiveChat()">
+                        <i class="fas fa-comments me-2"></i> Live Chat
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="api.js"></script>
+    <script src="auth.js"></script>
+    <script src="utils.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            AOS.init({
+                duration: 800,
+                once: true
+            });
+            
+            Auth.updateNav();
+            
+            // Initialize search
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    searchHelp();
+                }
+            });
+        });
+        
+        function toggleFAQ(element) {
+            const faqItem = element.closest('.faq-item');
+            const isExpanded = faqItem.classList.contains('expanded');
+            
+            // Close all other FAQs
+            document.querySelectorAll('.faq-item.expanded').forEach(item => {
+                if (item !== faqItem) {
+                    item.classList.remove('expanded');
+                }
+            });
+            
+            // Toggle current FAQ
+            faqItem.classList.toggle('expanded');
+        }
+        
+        function searchHelp() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            if (!searchTerm) {
+                // Show all FAQs
+                faqItems.forEach(item => item.style.display = 'block');
+                return;
+            }
+            
+            // Search through FAQs
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question span').textContent.toLowerCase();
+                const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
+                
+                if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+                    item.style.display = 'block';
+                    // Expand matching items
+                    item.classList.add('expanded');
+                } else {
+                    item.style.display = 'none';
+                    item.classList.remove('expanded');
+                }
+            });
+            
+            // Scroll to first result
+            const firstResult = document.querySelector('.faq-item[style="display: block;"]');
+            if (firstResult) {
+                firstResult.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+        
+        function filterCategory(category) {
+            // Update active pill
+            document.querySelectorAll('.category-pill').forEach(pill => {
+                pill.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Filter FAQs
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            if (category === 'all') {
+                faqItems.forEach(item => item.style.display = 'block');
+            } else {
+                faqItems.forEach(item => {
+                    if (item.dataset.category === category) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            }
+        }
+        
+        function startLiveChat() {
+            // In a real implementation, this would open a live chat widget
+            Utils.showToast('Live chat is coming soon! Please email us at support@eventticketing.com', 'info');
+        }
+        
+        // Track FAQ views for analytics
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', function() {
+                const questionText = this.querySelector('span').textContent;
+                console.log('FAQ viewed:', questionText);
+                // In a real implementation, this would send analytics data
+            });
+        });
+    </script>
+</body>
+</html>

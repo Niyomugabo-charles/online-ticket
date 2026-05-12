@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - EventTicketing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="dark-mode.css">
+    
+    <style>
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 150px 0 80px;
+        }
+        .privacy-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .privacy-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .privacy-section h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #f8f9fa;
+            padding-bottom: 0.5rem;
+        }
+        .privacy-section ul, .privacy-section ol {
+            padding-left: 1.5rem;
+        }
+        .privacy-section li {
+            margin-bottom: 0.5rem;
+        }
+        .last-updated {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .table-of-contents {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .table-of-contents ul {
+            list-style: none;
+            padding: 0;
+        }
+        .table-of-contents li {
+            margin-bottom: 0.5rem;
+        }
+        .table-of-contents a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        .table-of-contents a:hover {
+            text-decoration: underline;
+        }
+        .data-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        .data-type-card {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        .data-type-card h5 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="preloader"><div class="loader"><div class="loader-spinner"></div></div></div>
+    
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-ticket-alt brand-icon"></i>
+                <span class="brand-text">Event<span class="brand-highlight">Ticketing</span></span>
+            </a>
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/events">Events</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contact">Contact</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav" id="nav-links"></ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <div class="text-center text-white" data-aos="fade-up">
+                <h1 class="display-4 fw-bold mb-4">Privacy Policy</h1>
+                <p class="lead">How we collect, use, and protect your personal information</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Privacy Content -->
+    <section class="py-5">
+        <div class="container">
+            <div class="last-updated" data-aos="fade-up">
+                <i class="fas fa-clock me-2"></i>
+                Last updated: January 1, 2025
+            </div>
+
+            <div class="table-of-contents" data-aos="fade-up" data-aos-delay="100">
+                <h4 class="mb-3">Table of Contents</h4>
+                <ul>
+                    <li><a href="#introduction">1. Introduction</a></li>
+                    <li><a href="#information-collection">2. Information We Collect</a></li>
+                    <li><a href="#information-use">3. How We Use Your Information</a></li>
+                    <li><a href="#information-sharing">4. Information Sharing</a></li>
+                    <li><a href="#data-security">5. Data Security</a></li>
+                    <li><a href="#data-retention">6. Data Retention</a></li>
+                    <li><a href="#user-rights">7. Your Rights</a></li>
+                    <li><a href="#cookies">8. Cookies and Tracking</a></li>
+                    <li><a href="#third-party">9. Third-Party Services</a></li>
+                    <li><a href="#international">10. International Data Transfers</a></li>
+                    <li><a href="#children">11. Children's Privacy</a></li>
+                    <li><a href="#changes">12. Changes to This Policy</a></li>
+                    <li><a href="#contact">13. Contact Information</a></li>
+                </ul>
+            </div>
+
+            <div class="privacy-content">
+                <div class="privacy-section" data-aos="fade-up" data-aos-delay="200">
+                    <h3 id="introduction">1. Introduction</h3>
+                    <p>EventTicketing is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our platform to discover events, purchase tickets, or create and manage events.</p>
+                    <p>By using EventTicketing, you agree to the collection and use of information in accordance with this policy.</p>
+                </div>
+
+                <div class="privacy-section" data-aos="fade-up" data-aos-delay="300">
+                    <h3 id="information-collection">2. Information We Collect</h3>
+                    <p>We collect several types of information to provide and improve our services:</p>
+                    
+                    <h5>Personal Information</h5>
+                    <div class="data-types">
+                        <div class="data-type-card">
+                            <h5>Account Information</h5>
+                            <p>Name, email address, password, phone number</p>
+                        </div>
+                        <div class="data-type-card">
+                            <h5>Payment Information</h5>
+                            <p>Credit card details, billing address (processed securely)</p>
+                        </div>
+                        <div class="data-type-card">
+                            <h5>Profile Information</h5>
+                            <p>Profile picture, bio, preferences, interests</p>
+                        </div>
+                        <div class="data-type-card">
+                            <h5>Event Information</h5>
+                            <p>Events created, attended, tickets purchased</p>
+                        </div>
+                    </div>
+
+                    <h5>Automatically Collected Information</h5>
+                    <ul>
+                        <li>IP address and device information</li>
+                        <li>Browser type and version</li>
+                        <li>Operating system</li>
+                        <li>Pages visited and time spent</li>
+                        <li>Click patterns and navigation paths</li>
+                        <li>Location data (with your consent)</li>
+                    </ul>
+
+                    <h5>Cookies and Tracking Data</h5>
+                    <p>We use cookies and similar technologies to enhance your experience, analyze usage patterns, and personalize content.</p>
+                </div>
+
+                <div class="privacy-section" data-aos="fade-up">
+                    <h3 id="information-use">3. How We Use Your Information</h3>
+                    <p>We use your information for various purposes, including:</p>
+                    <ul>
+                        <li>Providing and maintaining our service</li>
+                        <li>Processing ticket purchases and event registrations</li>
+                        <li>Communicating with you about events and updates</li>
+                        <li>Personalizing your experience and recommendations</li>
+                        <li>Analyzing usage patterns to improve our services</li>
+                        <li>Detecting and preventing fraud</li>
+                        <li>Complying with legal obligations</li>
+                        <li>Customer support and troubleshooting</li>
+                    </ul>
+                </div>
+
+                <div class="privacy-section" data-aos="fade-up">
+                    <h3 id="information-sharing">4. Information Sharing</h3>
+                    <p>We may share your information in the following circumstances:</p>
+                    
+                    <h5>Event Organizers</h5>
+                    <p>When you purchase tickets or register for events, we share necessary information with event organizers, including:</p>
+                    <ul>
+                        <li>Name and email address for ticket confirmation</li>
+                        <li>Ticket purchase details</li>
+                        <li>Attendance status</li>
+                    </ul>
+
+                    <h5>Service Providers</h5>
+                    <p>We work with third-party service providers who help us operate our business, including:</p>
+                    <ul>
+                        <li>Payment processors (Stripe, PayPal)</li>
+                        <li>Email service providers</li>
+                        <li>Cloud hosting providers</li>
+                        <li>Analytics services</li>
+                    </ul>
+
+                    <h5>Legal Requirements</h5>
+                    <p>We may disclose your information if required by law or to protect our rights, property, or safety.</p>
+                </div>
+
+                <div class="privacy-section" data-aos="fade-up">
+                    <h3 id="data-security">5. Data Security</h3>
+                    <p>We implement appropriate security measures to protect your information, including:</p>
+                    <ul>
+                        <li>SSL encryption for data transmission</li>
+                        <li>Secure password storage (hashed and salted)</li>
+                        <li>Regular security audits and updates</li>
+                        <li>Access controls and authentication</li>
+                        <li>Employee training on data protection</li>
+                    </ul>
+                    <p>While we take reasonable precautions, no method of transmission over the internet is 100% secure.</p>
+                </div>
+
+                <div class="privacy-section" data-aos="fade-up">
+                    <h3 id="data-retention">6. Data Retention</h3>
+                    <p>We retain your information for as long as necessary to:</p>
+                    <ul>
+                        <li>Fulfill the purposes for which it was collected</li>
+                        <li>Comply with legal obligations</li>
+                        <li>Resolve disputes and enforce agreements</li>
+                        <li>Maintain business records</li>
+                    </ul>
+                    <p>You can request deletion of your account and personal information at any time.</p>
+                </div>
+
+                <div class="privacy-section" data-aos="fade-up">
+                    <h3 id="user-rights">7. Your Rights</h3>
+                    <p>Depending on your location, you may have the following rights:</p>
+                    <ul>
+                        <li><strong>Access:</strong> Request a copy of your personal information</li>
+                        <li><strong>Correction:</strong> Update inaccurate information</li>
+                        <li><strong>Deletion:</strong> Request removal of your personal information</li>
+                        <li><strong>Portability:</strong> Transfer your data to another service</li>
+                        <li><strong>Restriction:</strong> Limit how we use your information</li>
+                        <li><strong>Objection:</strong> Object to certain uses of your information</li>
+                    </ul>
+                    <p>To exercise these rights, contact us at privacy@eventticketing.com</p>
+                </div>
+
+                <div class="privacy-section" data-aos="fade-up">
+                    <h3 id="cookies">8. Cookies and Tracking</h3>
+                    <p>We use various types of cookies:</p>
+                    <ul>
+                        <li><strong>Essential Cookies:</strong> Required for basic functionality</li>
+                        <li><strong>Performance Cookies:</strong> Collect usage statistics</li>
+                        <li><strong>Functional Cookies:</strong> Remember your preferences</li>
+                        <li><strong>Marketing Cookies:</strong> Show relevant advertisements</li>
+                    </ul>
+                    <p>You can control cookies through your browser settings. Disabling cookies may affect some features of our service.</p>
+                </div>
+
+                <div class="privacy-section" data-aos="fade-up">
+                    <h3 id="third-party">9. Third-Party Services</h3>
+                    <p>Our platform may contain links to third-party websites and services. We are not responsible for their privacy practices. Please review their privacy policies before providing personal information.</p>
+                </div>
+
+                <div class="privacy-section" data-aos="fade-up">
+                    <h3 id="international">10. International Data Transfers</h3>
+                    <p>Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place for international data transfers.</p>
+                </div>
+
+                <div class="privacy-section" data-aos="fade-up">
+                    <h3 id="children">11. Children's Privacy</h3>
+                    <p>Our service is not intended for children under 18. We do not knowingly collect personal information from children under 18. If you believe we have collected such information, please contact us immediately.</p>
+                </div>
+
+                <div class="privacy-section" data-aos="fade-up">
+                    <h3 id="changes">12. Changes to This Policy</h3>
+                    <p>We may update this Privacy Policy from time to time. We will notify you of any changes by:</p>
+                    <ul>
+                        <li>Posting the new policy on our website</li>
+                        <li>Sending an email notification</li>
+                        <li>Displaying a prominent notice on our platform</li>
+                    </ul>
+                </div>
+
+                <div class="privacy-section" data-aos="fade-up">
+                    <h3 id="contact">13. Contact Information</h3>
+                    <p>If you have questions about this Privacy Policy or want to exercise your rights, please contact us:</p>
+                    <ul>
+                        <li>Email: privacy@eventticketing.com</li>
+                        <li>Phone: 1-800-EVENT-TIX</li>
+                        <li>Address: 123 Event Street, Ticket City, TC 12345</li>
+                        <li>Data Protection Officer: dpo@eventticketing.com</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="footer-brand">
+                        <i class="fas fa-ticket-alt"></i>
+                        <span>Event<span>Ticketing</span></span>
+                    </div>
+                    <p class="footer-text">Your ultimate destination for discovering and booking amazing events.</p>
+                    <div class="footer-social">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5>Quick Links</h5>
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/events">Events</a></li>
+                        <li><a href="/register">Register</a></li>
+                        <li><a href="/login">Login</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5>Support</h5>
+                    <ul>
+                        <li><a href="/help">Help Center</a></li>
+                        <li><a href="/faq">FAQs</a></li>
+                        <li><a href="/terms">Terms of Service</a></li>
+                        <li><a href="/privacy">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <h5>Newsletter</h5>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your email">
+                        <button><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 EventTicketing. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <button id="backToTop" class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="api.js"></script>
+    <script src="auth.js"></script>
+    <script src="utils.js"></script>
+    <script src="js/navigation-enhancer.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize AOS
+            AOS.init({
+                duration: 800,
+                once: true
+            });
+
+            // Smooth scroll for table of contents links
+            document.querySelectorAll('.table-of-contents a').forEach(anchor => {
+                anchor.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = anchor.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - EventTicketing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="dark-mode.css">
+    
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 0;
+        }
+        
+        .auth-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 20px;
+        }
+        
+        .auth-left {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .auth-right {
+            padding: 3rem;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .auth-brand {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+        }
+        
+        .auth-features {
+            margin-top: 2rem;
+        }
+        
+        .auth-feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .auth-feature i {
+            font-size: 1.2rem;
+            margin-right: 1rem;
+            color: #ffd700;
+        }
+        
+        .form-floating {
+            margin-bottom: 1.5rem;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #6c757d;
+            z-index: 10;
+        }
+        
+        .register-btn {
+            width: 100%;
+            padding: 12px;
+            font-weight: 600;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        .register-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .auth-divider {
+            text-align: center;
+            margin: 2rem 0;
+            position: relative;
+        }
+        
+        .auth-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #dee2e6;
+        }
+        
+        .auth-divider span {
+            background: white;
+            padding: 0 1rem;
+            position: relative;
+        }
+        
+        .social-login {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .social-btn {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            background: white;
+            transition: all 0.3s ease;
+        }
+        
+        .social-btn:hover {
+            background: #f8f9fa;
+            transform: translateY(-2px);
+        }
+        
+        .password-strength {
+            height: 5px;
+            border-radius: 3px;
+            margin-top: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .password-requirements {
+            font-size: 0.875rem;
+            color: #6c757d;
+            margin-top: 0.5rem;
+        }
+        
+        .requirement {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.25rem;
+        }
+        
+        .requirement i {
+            margin-right: 0.5rem;
+            color: #dc3545;
+        }
+        
+        .requirement.met i {
+            color: #28a745;
+        }
+        
+        @media (max-width: 768px) {
+            .auth-left {
+                display: none;
+            }
+            
+            .auth-right {
+                padding: 2rem;
+            }
+        }
+        
+        .verification-sent {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .verification-sent i {
+            font-size: 4rem;
+            color: #28a745;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="preloader"><div class="loader"><div class="loader-spinner"></div></div></div>
+    
+    <div class="auth-container">
+        <div class="auth-card" data-aos="fade-up">
+            <div class="row g-0">
+                <!-- Left Side - Features -->
+                <div class="col-lg-6 auth-left">
+                    <div class="auth-brand">
+                        <i class="fas fa-ticket-alt me-2"></i>
+                        Event<span class="brand-highlight">Ticketing</span>
+                    </div>
+                    
+                    <h2 class="mb-3">Join Us Today!</h2>
+                    <p class="mb-4">Create your account and start exploring amazing events.</p>
+                    
+                    <div class="auth-features">
+                        <div class="auth-feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Discover local and international events</span>
+                        </div>
+                        <div class="auth-feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Secure online ticket booking</span>
+                        </div>
+                        <div class="auth-feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Instant e-ticket delivery</span>
+                        </div>
+                        <div class="auth-feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Exclusive member benefits</span>
+                        </div>
+                        <div class="auth-feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Event recommendations for you</span>
+                        </div>
+                        <div class="auth-feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Become an event organizer</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right Side - Registration Form -->
+                <div class="col-lg-6 auth-right">
+                    <!-- Registration Form -->
+                    <div id="registrationForm">
+                        <div class="text-center mb-4">
+                            <h3>Create Account</h3>
+                            <p class="text-muted">Join our community of event enthusiasts</p>
+                        </div>
+                        
+                        <form id="registerForm">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" id="firstName" placeholder="First Name" required>
+                                        <label for="firstName">First Name</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" id="lastName" placeholder="Last Name" required>
+                                        <label for="lastName">Last Name</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-floating">
+                                <input type="email" class="form-control" id="email" placeholder="name@example.com" required>
+                                <label for="email">Email address</label>
+                                <div class="invalid-feedback">
+                                    Please provide a valid email address.
+                                </div>
+                            </div>
+                            
+                            <div class="form-floating position-relative">
+                                <input type="password" class="form-control" id="password" placeholder="Password" required>
+                                <label for="password">Password</label>
+                                <span class="password-toggle" onclick="togglePassword('password')">
+                                    <i class="fas fa-eye" id="passwordIcon"></i>
+                                </span>
+                            </div>
+                            
+                            <div class="password-strength" id="passwordStrength"></div>
+                            
+                            <div class="password-requirements" id="passwordRequirements">
+                                <div class="requirement" id="req-length">
+                                    <i class="fas fa-times-circle"></i> At least 8 characters
+                                </div>
+                                <div class="requirement" id="req-uppercase">
+                                    <i class="fas fa-times-circle"></i> 1 uppercase letter
+                                </div>
+                                <div class="requirement" id="req-lowercase">
+                                    <i class="fas fa-times-circle"></i> 1 lowercase letter
+                                </div>
+                                <div class="requirement" id="req-number">
+                                    <i class="fas fa-times-circle"></i> 1 number
+                                </div>
+                                <div class="requirement" id="req-special">
+                                    <i class="fas fa-times-circle"></i> 1 special character
+                                </div>
+                            </div>
+                            
+                            <div class="form-floating position-relative">
+                                <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password" required>
+                                <label for="confirmPassword">Confirm Password</label>
+                                <span class="password-toggle" onclick="togglePassword('confirmPassword')">
+                                    <i class="fas fa-eye" id="confirmPasswordIcon"></i>
+                                </span>
+                            </div>
+                            
+                            <div class="invalid-feedback" id="confirmPasswordError">
+                                Passwords do not match.
+                            </div>
+                            
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                                <label class="form-check-label" for="agreeTerms">
+                                    I agree to the <a href="#" onclick="showTerms()">Terms and Conditions</a> and <a href="#" onclick="showPrivacy()">Privacy Policy</a>
+                                </label>
+                            </div>
+                            
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="newsletter">
+                                <label class="form-check-label" for="newsletter">
+                                    Send me event updates and newsletters
+                                </label>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary register-btn" id="registerBtn">
+                                <span id="registerText">Create Account</span>
+                                <span id="registerSpinner" class="spinner-border spinner-border-sm ms-2" style="display: none;"></span>
+                            </button>
+                        </form>
+                        
+                        <div class="auth-divider">
+                            <span>OR</span>
+                        </div>
+                        
+                        <div class="social-login">
+                            <button type="button" class="social-btn" onclick="socialRegister('google')">
+                                <i class="fab fa-google text-danger"></i> Google
+                            </button>
+                            <button type="button" class="social-btn" onclick="socialRegister('facebook')">
+                                <i class="fab fa-facebook text-primary"></i> Facebook
+                            </button>
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <p class="mb-0">Already have an account? <a href="/login" class="text-decoration-none fw-bold">Sign in</a></p>
+                        </div>
+                    </div>
+                    
+                    <!-- Verification Sent Message -->
+                    <div class="verification-sent" id="verificationSent">
+                        <i class="fas fa-envelope-open-text"></i>
+                        <h3>Verification Email Sent!</h3>
+                        <p class="mb-3">We've sent a verification link to your email address.</p>
+                        <p class="mb-4">Please check your inbox and click the verification link to activate your account.</p>
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            If you don't receive the email within a few minutes, please check your spam folder.
+                        </div>
+                        <button class="btn btn-outline-primary" onclick="resendVerification()">
+                            <i class="fas fa-redo me-2"></i> Resend Verification
+                        </button>
+                        <div class="mt-3">
+                            <a href="/login" class="text-decoration-none">Back to Login</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/router.js"></script>
+    
+    <script>
+        let passwordValidation = {
+            length: false,
+            uppercase: false,
+            lowercase: false,
+            number: false,
+            special: false
+        };
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if user is already logged in
+            if (Auth.isAuthenticated()) {
+                const user = Auth.getUser();
+                if (user.role === 'admin') {
+                    window.location.href = '/admin-dashboard';
+                } else if (user.role === 'organiser') {
+                    window.location.href = '/organiser-dashboard';
+                } else {
+                    window.location.href = '/dashboard';
+                }
+                return;
+            }
+            
+            // Initialize AOS
+            AOS.init({
+                duration: 800,
+                once: true
+            });
+            
+            // Initialize form
+            document.getElementById('registerForm').addEventListener('submit', handleRegister);
+            
+            // Password validation
+            document.getElementById('password').addEventListener('input', validatePassword);
+            document.getElementById('confirmPassword').addEventListener('input', validatePasswordMatch);
+        });
+        
+        async function handleRegister(e) {
+            e.preventDefault();
+            
+            if (!validateForm()) {
+                return;
+            }
+            
+            const userData = {
+                first_name: document.getElementById('firstName').value,
+                last_name: document.getElementById('lastName').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                newsletter: document.getElementById('newsletter').checked
+            };
+            
+            // Show loading state
+            document.getElementById('registerText').textContent = 'Creating Account...';
+            document.getElementById('registerSpinner').style.display = 'inline-block';
+            document.getElementById('registerBtn').disabled = true;
+            
+            try {
+                const result = await Auth.register(userData);
+                
+                if (result.success) {
+                    // Show verification sent message
+                    document.getElementById('registrationForm').style.display = 'none';
+                    document.getElementById('verificationSent').style.display = 'block';
+                } else {
+                    // Reset button state
+                    document.getElementById('registerText').textContent = 'Create Account';
+                    document.getElementById('registerSpinner').style.display = 'none';
+                    document.getElementById('registerBtn').disabled = false;
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                
+                document.getElementById('registerText').textContent = 'Create Account';
+                document.getElementById('registerSpinner').style.display = 'none';
+                document.getElementById('registerBtn').disabled = false;
+            }
+        }
+        
+        function validateForm() {
+            let isValid = true;
+            
+            // Validate first name
+            const firstName = document.getElementById('firstName');
+            if (!firstName.value.trim()) {
+                firstName.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                firstName.classList.remove('is-invalid');
+            }
+            
+            // Validate last name
+            const lastName = document.getElementById('lastName');
+            if (!lastName.value.trim()) {
+                lastName.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                lastName.classList.remove('is-invalid');
+            }
+            
+            // Validate email
+            const email = document.getElementById('email');
+            if (!email.value.trim() || !Utils.validateEmail(email.value)) {
+                email.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                email.classList.remove('is-invalid');
+            }
+            
+            // Validate password
+            const password = document.getElementById('password');
+            if (!password.value || !Object.values(passwordValidation).every(v => v)) {
+                password.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                password.classList.remove('is-invalid');
+            }
+            
+            // Validate password match
+            const confirmPassword = document.getElementById('confirmPassword');
+            if (password.value !== confirmPassword.value) {
+                confirmPassword.classList.add('is-invalid');
+                document.getElementById('confirmPasswordError').style.display = 'block';
+                isValid = false;
+            } else {
+                confirmPassword.classList.remove('is-invalid');
+                document.getElementById('confirmPasswordError').style.display = 'none';
+            }
+            
+            // Validate terms agreement
+            const agreeTerms = document.getElementById('agreeTerms');
+            if (!agreeTerms.checked) {
+                agreeTerms.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                agreeTerms.classList.remove('is-invalid');
+            }
+            
+            return isValid;
+        }
+        
+        function validatePassword() {
+            const password = document.getElementById('password').value;
+            const strengthBar = document.getElementById('passwordStrength');
+            
+            // Check each requirement
+            passwordValidation.length = password.length >= 8;
+            passwordValidation.uppercase = /[A-Z]/.test(password);
+            passwordValidation.lowercase = /[a-z]/.test(password);
+            passwordValidation.number = /\d/.test(password);
+            passwordValidation.special = /[@$!%*?&]/.test(password);
+            
+            // Update requirement indicators
+            updateRequirement('req-length', passwordValidation.length);
+            updateRequirement('req-uppercase', passwordValidation.uppercase);
+            updateRequirement('req-lowercase', passwordValidation.lowercase);
+            updateRequirement('req-number', passwordValidation.number);
+            updateRequirement('req-special', passwordValidation.special);
+            
+            // Update password strength bar
+            const strength = Object.values(passwordValidation).filter(v => v).length;
+            const percentage = (strength / 5) * 100;
+            
+            strengthBar.style.width = percentage + '%';
+            
+            if (strength <= 2) {
+                strengthBar.style.backgroundColor = '#dc3545';
+            } else if (strength <= 3) {
+                strengthBar.style.backgroundColor = '#ffc107';
+            } else if (strength <= 4) {
+                strengthBar.style.backgroundColor = '#fd7e14';
+            } else {
+                strengthBar.style.backgroundColor = '#28a745';
+            }
+        }
+        
+        function updateRequirement(id, met) {
+            const element = document.getElementById(id);
+            const icon = element.querySelector('i');
+            
+            if (met) {
+                element.classList.add('met');
+                icon.classList.remove('fa-times-circle');
+                icon.classList.add('fa-check-circle');
+            } else {
+                element.classList.remove('met');
+                icon.classList.remove('fa-check-circle');
+                icon.classList.add('fa-times-circle');
+            }
+        }
+        
+        function validatePasswordMatch() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const errorElement = document.getElementById('confirmPasswordError');
+            
+            if (confirmPassword && password !== confirmPassword) {
+                document.getElementById('confirmPassword').classList.add('is-invalid');
+                errorElement.style.display = 'block';
+            } else {
+                document.getElementById('confirmPassword').classList.remove('is-invalid');
+                errorElement.style.display = 'none';
+            }
+        }
+        
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            const icon = document.getElementById(fieldId + 'Icon');
+            
+            if (field.type === 'password') {
+                field.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                field.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+        
+        function socialRegister(provider) {
+            Utils.showToast(`${provider} registration coming soon!`, 'info');
+        }
+        
+        function showTerms() {
+            Utils.showToast('Terms and Conditions page coming soon!', 'info');
+        }
+        
+        function showPrivacy() {
+            Utils.showToast('Privacy Policy page coming soon!', 'info');
+        }
+        
+        async function resendVerification() {
+            const email = document.getElementById('email').value;
+            
+            if (!email) {
+                Utils.showToast('Please provide your email address', 'error');
+                return;
+            }
+            
+            try {
+                // This would call an API to resend verification
+                Utils.showToast('Verification email resent!', 'success');
+            } catch (error) {
+                Utils.showToast('Failed to resend verification email', 'error');
+            }
+        }
+    </script>
+</body>
+</html>

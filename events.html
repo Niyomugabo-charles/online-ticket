@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events - EventTicketing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="dark-mode.css">
+    
+    <style>
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 150px 0 80px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,138.7C960,139,1056,117,1152,117.3C1248,117,1344,139,1392,149.3L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+            background-size: cover;
+        }
+        
+        .events-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .filter-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .search-box {
+            background: #f8f9fa;
+            border-radius: 50px;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .search-box input {
+            border: none;
+            outline: none;
+            padding: 12px 20px;
+            flex: 1;
+            border-radius: 50px;
+            background: transparent;
+        }
+        
+        .search-box button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .search-box button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .filter-pills {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+        
+        .filter-pill {
+            background: #f8f9fa;
+            color: #666;
+            padding: 8px 16px;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid #e9ecef;
+            cursor: pointer;
+        }
+        
+        .filter-pill:hover,
+        .filter-pill.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .event-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        
+        .event-image {
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .event-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .event-date-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: white;
+            color: #667eea;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .event-body {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .event-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+        
+        .event-venue {
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+        
+        .event-time {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        
+        .event-description {
+            color: #666;
+            margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+        
+        .event-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .event-price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+        
+        .event-action {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .event-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .no-events {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #666;
+        }
+        
+        .no-events i {
+            font-size: 4rem;
+            color: #e9ecef;
+            margin-bottom: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .page-header {
+                padding: 120px 0 60px;
+            }
+            
+            .filter-pills {
+                gap: 0.25rem;
+            }
+            
+            .filter-pill {
+                font-size: 0.875rem;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="preloader"><div class="loader"><div class="loader-spinner"></div></div></div>
+    
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-ticket-alt brand-icon"></i>
+                <span class="brand-text">Event<span class="brand-highlight">Ticketing</span></span>
+            </a>
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/events">Events</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contact">Contact</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav" id="nav-links"></ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <div class="text-center" data-aos="fade-up">
+                <h1 class="display-4 fw-bold mb-4">Discover Amazing Events</h1>
+                <p class="lead">Find and book tickets for the best events in your city</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Events Section -->
+    <section class="events-section py-5">
+        <div class="container events-container">
+            <!-- Filter Section -->
+            <div class="filter-section" data-aos="fade-up">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="search-box">
+                            <input type="text" id="eventSearch" placeholder="Search for events, artists, or venues...">
+                            <button onclick="searchEvents()">
+                                <i class="fas fa-search me-2"></i> Search
+                            </button>
+                        </div>
+                        
+                        <div class="filter-pills">
+                            <div class="filter-pill active" onclick="filterByCategory('all')">All Events</div>
+                            <div class="filter-pill" onclick="filterByCategory('music')">Music</div>
+                            <div class="filter-pill" onclick="filterByCategory('sports')">Sports</div>
+                            <div class="filter-pill" onclick="filterByCategory('theatre')">Theatre</div>
+                            <div class="filter-pill" onclick="filterByCategory('business')">Business</div>
+                            <div class="filter-pill" onclick="filterByCategory('arts')">Arts</div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4">
+                        <div class="d-flex gap-2">
+                            <select class="form-select" id="sortSelect" onchange="sortEvents()">
+                                <option value="date">Sort by Date</option>
+                                <option value="price">Sort by Price</option>
+                                <option value="popularity">Sort by Popularity</option>
+                            </select>
+                            <select class="form-select" id="priceFilter" onchange="filterByPrice()">
+                                <option value="all">All Prices</option>
+                                <option value="free">Free</option>
+                                <option value="0-50">$0 - $50</option>
+                                <option value="50-100">$50 - $100</option>
+                                <option value="100+">$100+</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Events Grid -->
+            <div class="row g-4" id="eventsGrid">
+                <!-- Events will be loaded here -->
+            </div>
+
+            <!-- Loading State -->
+            <div id="loadingState" class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2">Loading events...</p>
+            </div>
+
+            <!-- No Events State -->
+            <div id="noEventsState" class="no-events" style="display: none;">
+                <i class="fas fa-calendar-times"></i>
+                <h3>No Events Found</h3>
+                <p>Try adjusting your filters or search criteria</p>
+                <button class="btn btn-primary" onclick="resetFilters()">Reset Filters</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="footer-brand">
+                        <i class="fas fa-ticket-alt"></i>
+                        <span>Event<span>Ticketing</span></span>
+                    </div>
+                    <p class="footer-text">Your ultimate destination for discovering and booking amazing events.</p>
+                    <div class="footer-social">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5>Quick Links</h5>
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/events">Events</a></li>
+                        <li><a href="/about">About</a></li>
+                        <li><a href="/contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5>Support</h5>
+                    <ul>
+                        <li><a href="/help">Help Center</a></li>
+                        <li><a href="/faq">FAQs</a></li>
+                        <li><a href="/terms">Terms of Service</a></li>
+                        <li><a href="/privacy">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <h5>Newsletter</h5>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your email">
+                        <button><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 EventTicketing. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <button id="backToTop" class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="api.js"></script>
+    <script src="auth.js"></script>
+    <script src="utils.js"></script>
+    <script src="router.js"></script>
+    <script src="js/navigation-enhancer.js"></script>
+    
+    <script>
+        let allEvents = [];
+        let filteredEvents = [];
+        let currentCategory = 'all';
+        let currentSort = 'date';
+        let currentPriceFilter = 'all';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Initialize AOS
+            AOS.init({
+                duration: 800,
+                once: true
+            });
+            
+            // Update navigation
+            Auth.updateNav();
+            
+            // Load URL parameters
+            loadUrlParameters();
+            
+            // Load events
+            await loadEvents();
+            
+            // Setup search
+            setupSearch();
+        });
+
+        function loadUrlParameters() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const category = urlParams.get('category');
+            const search = urlParams.get('search');
+            
+            if (category) {
+                currentCategory = category;
+                updateCategoryFilter();
+            }
+            
+            if (search) {
+                document.getElementById('eventSearch').value = search;
+            }
+        }
+
+        async function loadEvents() {
+            try {
+                Utils.showLoading();
+                
+                // Build query string
+                let query = '';
+                if (currentCategory !== 'all') {
+                    query += `category=${currentCategory}`;
+                }
+                
+                const data = await api.getEvents(query);
+                allEvents = data.events || [];
+                filteredEvents = [...allEvents];
+                
+                // Apply filters and sorting
+                applyFilters();
+                
+            } catch (error) {
+                console.error('Error loading events:', error);
+                // Show placeholder events for demo
+                showPlaceholderEvents();
+            } finally {
+                Utils.hideLoading();
+                document.getElementById('loadingState').style.display = 'none';
+            }
+        }
+
+        function showPlaceholderEvents() {
+            allEvents = [
+                {
+                    id: 1,
+                    title: "Summer Music Festival",
+                    venue: "Central Park",
+                    date: "2025-06-15",
+                    time: "18:00",
+                    price: 45,
+                    category: "music",
+                    description: "An amazing outdoor music festival featuring top artists.",
+                    image: "https://picsum.photos/seed/music1/400/300.jpg"
+                },
+                {
+                    id: 2,
+                    title: "Tech Conference 2025",
+                    venue: "Convention Center",
+                    date: "2025-07-20",
+                    time: "09:00",
+                    price: 120,
+                    category: "business",
+                    description: "Annual technology conference with industry leaders.",
+                    image: "https://picsum.photos/seed/tech1/400/300.jpg"
+                },
+                {
+                    id: 3,
+                    title: "Comedy Night",
+                    venue: "Laugh Factory",
+                    date: "2025-05-30",
+                    time: "20:00",
+                    price: 25,
+                    category: "theatre",
+                    description: "Stand-up comedy featuring local comedians.",
+                    image: "https://picsum.photos/seed/comedy1/400/300.jpg"
+                },
+                {
+                    id: 4,
+                    title: "Basketball Championship",
+                    venue: "Sports Arena",
+                    date: "2025-08-10",
+                    time: "19:30",
+                    price: 65,
+                    category: "sports",
+                    description: "Championship finals game.",
+                    image: "https://picsum.photos/seed/sports1/400/300.jpg"
+                },
+                {
+                    id: 5,
+                    title: "Art Exhibition",
+                    venue: "City Gallery",
+                    date: "2025-06-01",
+                    time: "10:00",
+                    price: 15,
+                    category: "arts",
+                    description: "Contemporary art exhibition featuring local artists.",
+                    image: "https://picsum.photos/seed/art1/400/300.jpg"
+                },
+                {
+                    id: 6,
+                    title: "Jazz Evening",
+                    venue: "Blue Note Club",
+                    date: "2025-05-25",
+                    time: "21:00",
+                    price: 35,
+                    category: "music",
+                    description: "Intimate jazz performance with renowned musicians.",
+                    image: "https://picsum.photos/seed/jazz1/400/300.jpg"
+                }
+            ];
+            
+            filteredEvents = [...allEvents];
+            applyFilters();
+        }
+
+        function applyFilters() {
+            // Apply category filter
+            if (currentCategory !== 'all') {
+                filteredEvents = allEvents.filter(event => event.category === currentCategory);
+            } else {
+                filteredEvents = [...allEvents];
+            }
+            
+            // Apply price filter
+            if (currentPriceFilter !== 'all') {
+                filteredEvents = filteredEvents.filter(event => {
+                    if (currentPriceFilter === 'free') return event.price === 0;
+                    if (currentPriceFilter === '0-50') return event.price >= 0 && event.price <= 50;
+                    if (currentPriceFilter === '50-100') return event.price > 50 && event.price <= 100;
+                    if (currentPriceFilter === '100+') return event.price > 100;
+                    return true;
+                });
+            }
+            
+            // Apply search filter
+            const searchTerm = document.getElementById('eventSearch').value.toLowerCase();
+            if (searchTerm) {
+                filteredEvents = filteredEvents.filter(event => 
+                    event.title.toLowerCase().includes(searchTerm) ||
+                    event.venue.toLowerCase().includes(searchTerm) ||
+                    event.description.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // Apply sorting
+            sortEventList();
+            
+            // Render events
+            renderEvents();
+        }
+
+        function sortEventList() {
+            switch (currentSort) {
+                case 'date':
+                    filteredEvents.sort((a, b) => new Date(a.date) - new Date(b.date));
+                    break;
+                case 'price':
+                    filteredEvents.sort((a, b) => a.price - b.price);
+                    break;
+                case 'popularity':
+                    filteredEvents.sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
+                    break;
+            }
+        }
+
+        function renderEvents() {
+            const grid = document.getElementById('eventsGrid');
+            const noEventsState = document.getElementById('noEventsState');
+            
+            if (filteredEvents.length === 0) {
+                grid.innerHTML = '';
+                noEventsState.style.display = 'block';
+                return;
+            }
+            
+            noEventsState.style.display = 'none';
+            grid.innerHTML = filteredEvents.map(event => createEventCard(event)).join('');
+        }
+
+        function createEventCard(event) {
+            const eventDate = new Date(event.date);
+            const formattedDate = eventDate.toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric', 
+                year: 'numeric' 
+            });
+            
+            return `
+                <div class="col-lg-4 col-md-6" data-aos="fade-up">
+                    <div class="event-card">
+                        <div class="event-image">
+                            <img src="${event.image || 'https://picsum.photos/seed/event' + event.id + '/400/300.jpg'}" alt="${event.title}">
+                            <div class="event-date-badge">
+                                ${formattedDate}
+                            </div>
+                        </div>
+                        <div class="event-body">
+                            <h5 class="event-title">${Utils.escapeHtml(event.title)}</h5>
+                            <div class="event-venue">
+                                <i class="fas fa-map-marker-alt me-2"></i> ${Utils.escapeHtml(event.venue)}
+                            </div>
+                            <div class="event-time">
+                                <i class="fas fa-clock me-2"></i> ${event.time || 'TBD'}
+                            </div>
+                            <p class="event-description">${Utils.escapeHtml(event.description)}</p>
+                            <div class="event-footer">
+                                <div class="event-price">
+                                    ${event.price === 0 ? 'Free' : '$' + event.price}
+                                </div>
+                                <a href="/event-detail?id=${event.id}" class="event-action">
+                                    View Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function filterByCategory(category) {
+            currentCategory = category;
+            updateCategoryFilter();
+            applyFilters();
+        }
+
+        function updateCategoryFilter() {
+            document.querySelectorAll('.filter-pill').forEach(pill => {
+                pill.classList.remove('active');
+            });
+            
+            const activePill = Array.from(document.querySelectorAll('.filter-pill')).find(
+                pill => pill.textContent.toLowerCase().includes(currentCategory) || 
+                        (currentCategory === 'all' && pill.textContent === 'All Events')
+            );
+            
+            if (activePill) {
+                activePill.classList.add('active');
+            }
+        }
+
+        function filterByPrice() {
+            currentPriceFilter = document.getElementById('priceFilter').value;
+            applyFilters();
+        }
+
+        function sortEvents() {
+            currentSort = document.getElementById('sortSelect').value;
+            applyFilters();
+        }
+
+        function searchEvents() {
+            applyFilters();
+        }
+
+        function setupSearch() {
+            const searchInput = document.getElementById('eventSearch');
+            
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    searchEvents();
+                }
+            });
+            
+            // Real-time search
+            searchInput.addEventListener('input', () => {
+                clearTimeout(searchInput.searchTimeout);
+                searchInput.searchTimeout = setTimeout(() => {
+                    searchEvents();
+                }, 300);
+            });
+        }
+
+        function resetFilters() {
+            currentCategory = 'all';
+            currentSort = 'date';
+            currentPriceFilter = 'all';
+            
+            document.getElementById('eventSearch').value = '';
+            document.getElementById('sortSelect').value = 'date';
+            document.getElementById('priceFilter').value = 'all';
+            
+            updateCategoryFilter();
+            applyFilters();
+        }
+
+        function viewEventDetail(eventId) {
+            window.location.href = `/event-detail?id=${eventId}`;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+# Register a new user
+curl -X POST http://localhost:5000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@example.com","password":"Test123!","first_name":"John","last_name":"Doe"}'
+
+# Login
+curl -X POST http://localhost:5000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@example.com","password":"Test123!"}'
+
+# Get events (with token)
+curl -X GET http://localhost:5000/api/events \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE"
+
+# Create event (organiser only)
+curl -X POST http://localhost:5000/api/events \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+  -d '{"title":"Summer Fest","description":"Amazing event","venue_name":"Central Park","event_date":"2025-07-15","event_time":"14:00","category_id":1}'

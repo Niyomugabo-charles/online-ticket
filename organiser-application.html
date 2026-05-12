@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organizer Application - EventTicketing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="dark-mode.css">
+    
+    <style>
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 150px 0 80px;
+        }
+        .application-form {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .form-section {
+            margin-bottom: 2rem;
+        }
+        .form-section h4 {
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #f8f9fa;
+        }
+        .form-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        .form-control, .form-select {
+            border-radius: 10px;
+            border: 2px solid #e5e7eb;
+            padding: 0.75rem 1rem;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        .requirements-list {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .requirements-list h4 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        .requirements-list ul {
+            list-style: none;
+            padding: 0;
+        }
+        .requirements-list li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        .requirements-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+        }
+        .file-upload {
+            border: 2px dashed #e5e7eb;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .file-upload:hover {
+            border-color: #667eea;
+            background: #f8f9fa;
+        }
+        .file-upload.dragover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e5e7eb;
+            z-index: 0;
+        }
+        .step {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            position: relative;
+            z-index: 1;
+        }
+        .step.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        .step.completed {
+            background: #10b981;
+            color: white;
+            border-color: #10b981;
+        }
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .benefit-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .benefit-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            margin: 0 auto 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="preloader"><div class="loader"><div class="loader-spinner"></div></div></div>
+    
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-ticket-alt brand-icon"></i>
+                <span class="brand-text">Event<span class="brand-highlight">Ticketing</span></span>
+            </a>
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/events">Events</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contact">Contact</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav" id="nav-links"></ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <div class="text-center text-white" data-aos="fade-up">
+                <h1 class="display-4 fw-bold mb-4">Become an Event Organizer</h1>
+                <p class="lead">Join thousands of successful event organizers on EventTicketing</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Application Form -->
+    <section class="py-5">
+        <div class="container">
+            <!-- Benefits Section -->
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="display-5 fw-bold mb-3">Why Choose EventTicketing?</h2>
+                <p class="text-muted lead">Powerful tools to help you create, manage, and grow your events</p>
+            </div>
+
+            <div class="benefits-grid mb-5">
+                <div class="benefit-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="benefit-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h5>Reach Millions</h5>
+                    <p class="text-muted">Access our growing community of event enthusiasts</p>
+                </div>
+                
+                <div class="benefit-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="benefit-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h5>Advanced Analytics</h5>
+                    <p class="text-muted">Track sales, attendance, and customer behavior</p>
+                </div>
+                
+                <div class="benefit-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="benefit-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h5>Secure Payments</h5>
+                    <p class="text-muted">PCI-compliant payment processing with fraud protection</p>
+                </div>
+                
+                <div class="benefit-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="benefit-icon">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <h5>Marketing Tools</h5>
+                    <p class="text-muted">Promote your events with built-in marketing features</p>
+                </div>
+            </div>
+
+            <!-- Requirements -->
+            <div class="requirements-list" data-aos="fade-up">
+                <h4>Requirements to Become an Organizer</h4>
+                <ul>
+                    <li>Valid business registration or proof of identity</li>
+                    <li>Active email address and phone number</li>
+                    <li>Bank account for receiving payments</li>
+                    <li>At least 6 months of event planning experience</li>
+                    <li>Compliance with local event regulations</li>
+                    <li>Professional references (optional but recommended)</li>
+                </ul>
+            </div>
+
+            <!-- Application Form -->
+            <div class="application-form" data-aos="fade-up" data-aos-delay="100">
+                <div class="progress-steps mb-4">
+                    <div class="step active">1</div>
+                    <div class="step">2</div>
+                    <div class="step">3</div>
+                </div>
+
+                <h3 class="text-center mb-4">Organizer Application Form</h3>
+                <p class="text-center text-muted mb-4">Please fill out all required fields. We'll review your application within 2-3 business days.</p>
+
+                <form id="organizerApplicationForm">
+                    <!-- Personal Information -->
+                    <div class="form-section">
+                        <h4><i class="fas fa-user me-2"></i>Personal Information</h4>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">First Name *</label>
+                                <input type="text" class="form-control" name="firstName" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Last Name *</label>
+                                <input type="text" class="form-control" name="lastName" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Email Address *</label>
+                                <input type="email" class="form-control" name="email" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Phone Number *</label>
+                                <input type="tel" class="form-control" name="phone" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Business Information -->
+                    <div class="form-section">
+                        <h4><i class="fas fa-building me-2"></i>Business Information</h4>
+                        <div class="mb-3">
+                            <label class="form-label">Company Name *</label>
+                            <input type="text" class="form-control" name="companyName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Business Email *</label>
+                            <input type="email" class="form-control" name="businessEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Business Phone *</label>
+                            <input type="tel" class="form-control" name="businessPhone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Website</label>
+                            <input type="url" class="form-control" name="website" placeholder="https://">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Business Description *</label>
+                            <textarea class="form-control" name="businessDescription" rows="4" required 
+                                placeholder="Tell us about your business and experience in event organizing..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Event Experience -->
+                    <div class="form-section">
+                        <h4><i class="fas fa-calendar-alt me-2"></i>Event Experience</h4>
+                        <div class="mb-3">
+                            <label class="form-label">Years of Experience *</label>
+                            <select class="form-select" name="experience" required>
+                                <option value="">Select experience level</option>
+                                <option value="0-1">Less than 1 year</option>
+                                <option value="1-3">1-3 years</option>
+                                <option value="3-5">3-5 years</option>
+                                <option value="5-10">5-10 years</option>
+                                <option value="10+">More than 10 years</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Types of Events Organized *</label>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="eventTypes" value="concerts" id="concerts">
+                                        <label class="form-check-label" for="concerts">Concerts</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="eventTypes" value="conferences" id="conferences">
+                                        <label class="form-check-label" for="conferences">Conferences</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="eventTypes" value="workshops" id="workshops">
+                                        <label class="form-check-label" for="workshops">Workshops</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="eventTypes" value="festivals" id="festivals">
+                                        <label class="form-check-label" for="festivals">Festivals</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="eventTypes" value="sports" id="sports">
+                                        <label class="form-check-label" for="sports">Sports Events</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="eventTypes" value="other" id="other">
+                                        <label class="form-check-label" for="other">Other</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Number of Events Organized *</label>
+                            <input type="number" class="form-control" name="eventsCount" min="0" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Notable Events or References</label>
+                            <textarea class="form-control" name="references" rows="3" 
+                                placeholder="List any notable events you've organized or references..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Document Upload -->
+                    <div class="form-section">
+                        <h4><i class="fas fa-file-upload me-2"></i>Supporting Documents</h4>
+                        <div class="mb-3">
+                            <label class="form-label">Business Registration Document *</label>
+                            <div class="file-upload" id="businessDocUpload">
+                                <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                                <p class="mb-2">Drag and drop your business registration document here</p>
+                                <p class="text-muted small">or click to browse (PDF, JPG, PNG - Max 5MB)</p>
+                                <input type="file" id="businessDoc" name="businessDoc" accept=".pdf,.jpg,.jpeg,.png" style="display: none;" required>
+                            </div>
+                            <div id="businessDocPreview" class="mt-2"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Additional Documents (Optional)</label>
+                            <div class="file-upload" id="additionalDocUpload">
+                                <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                                <p class="mb-2">Upload additional supporting documents</p>
+                                <p class="text-muted small">Portfolio, references, certifications, etc.</p>
+                                <input type="file" id="additionalDoc" name="additionalDoc" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" multiple style="display: none;">
+                            </div>
+                            <div id="additionalDocPreview" class="mt-2"></div>
+                        </div>
+                    </div>
+
+                    <!-- Terms and Conditions -->
+                    <div class="form-section">
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="terms" required>
+                            <label class="form-check-label" for="terms">
+                                I agree to the <a href="/terms" target="_blank">Terms of Service</a> and <a href="/privacy" target="_blank">Privacy Policy</a>
+                            </label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="accuracy" required>
+                            <label class="form-check-label" for="accuracy">
+                                I certify that all information provided is accurate and truthful
+                            </label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="communications">
+                            <label class="form-check-label" for="communications">
+                                I agree to receive communications about my application and platform updates
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary btn-lg px-5" id="submitBtn">
+                            <span id="submitText">Submit Application</span>
+                            <span id="submitSpinner" class="spinner-border spinner-border-sm ms-2" style="display: none;"></span>
+                        </button>
+                        <p class="text-muted mt-3">We'll review your application within 2-3 business days</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="footer-brand">
+                        <i class="fas fa-ticket-alt"></i>
+                        <span>Event<span>Ticketing</span></span>
+                    </div>
+                    <p class="footer-text">Your ultimate destination for discovering and booking amazing events.</p>
+                    <div class="footer-social">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5>Quick Links</h5>
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/events">Events</a></li>
+                        <li><a href="/register">Register</a></li>
+                        <li><a href="/login">Login</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5>Support</h5>
+                    <ul>
+                        <li><a href="/help">Help Center</a></li>
+                        <li><a href="/faq">FAQs</a></li>
+                        <li><a href="/terms">Terms of Service</a></li>
+                        <li><a href="/privacy">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <h5>Newsletter</h5>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your email">
+                        <button><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 EventTicketing. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <button id="backToTop" class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="api.js"></script>
+    <script src="auth.js"></script>
+    <script src="utils.js"></script>
+    <script src="js/navigation-enhancer.js"></script>
+    
+    <script>
+        let uploadedFiles = {};
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize AOS
+            AOS.init({
+                duration: 800,
+                once: true
+            });
+
+            // Check if user is logged in
+            if (!Auth.isAuthenticated()) {
+                Utils.showToast('Please login to submit an organizer application', 'warning');
+                setTimeout(() => {
+                    window.location.href = `/login?redirect=${encodeURIComponent(window.location.href)}`;
+                }, 2000);
+                return;
+            }
+
+            setupFileUpload();
+            setupFormSubmission();
+        });
+
+        function setupFileUpload() {
+            // Business document upload
+            const businessUpload = document.getElementById('businessDocUpload');
+            const businessInput = document.getElementById('businessDoc');
+            
+            businessUpload.addEventListener('click', () => businessInput.click());
+            
+            businessUpload.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                businessUpload.classList.add('dragover');
+            });
+            
+            businessUpload.addEventListener('dragleave', () => {
+                businessUpload.classList.remove('dragover');
+            });
+            
+            businessUpload.addEventListener('drop', (e) => {
+                e.preventDefault();
+                businessUpload.classList.remove('dragover');
+                handleFileUpload(e.dataTransfer.files[0], 'businessDoc');
+            });
+            
+            businessInput.addEventListener('change', (e) => {
+                handleFileUpload(e.target.files[0], 'businessDoc');
+            });
+
+            // Additional documents upload
+            const additionalUpload = document.getElementById('additionalDocUpload');
+            const additionalInput = document.getElementById('additionalDoc');
+            
+            additionalUpload.addEventListener('click', () => additionalInput.click());
+            
+            additionalUpload.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                additionalUpload.classList.add('dragover');
+            });
+            
+            additionalUpload.addEventListener('dragleave', () => {
+                additionalUpload.classList.remove('dragover');
+            });
+            
+            additionalUpload.addEventListener('drop', (e) => {
+                e.preventDefault();
+                additionalUpload.classList.remove('dragover');
+                handleMultipleFileUpload(e.dataTransfer.files, 'additionalDoc');
+            });
+            
+            additionalInput.addEventListener('change', (e) => {
+                handleMultipleFileUpload(e.target.files, 'additionalDoc');
+            });
+        }
+
+        function handleFileUpload(file, type) {
+            if (!file) return;
+            
+            // Validate file
+            if (!validateFile(file)) return;
+            
+            // Store file
+            uploadedFiles[type] = file;
+            
+            // Show preview
+            const preview = document.getElementById(type + 'Preview');
+            preview.innerHTML = `
+                <div class="alert alert-success d-flex align-items-center">
+                    <i class="fas fa-file me-2"></i>
+                    <div>
+                        <strong>${file.name}</strong>
+                        <br>
+                        <small class="text-muted">${formatFileSize(file.size)}</small>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-outline-danger ms-auto" onclick="removeFile('${type}')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+        }
+
+        function handleMultipleFileUpload(files, type) {
+            const preview = document.getElementById(type + 'Preview');
+            uploadedFiles[type] = uploadedFiles[type] || [];
+            
+            Array.from(files).forEach(file => {
+                if (validateFile(file)) {
+                    uploadedFiles[type].push(file);
+                }
+            });
+            
+            // Show preview
+            preview.innerHTML = uploadedFiles[type].map((file, index) => `
+                <div class="alert alert-success d-flex align-items-center mb-2">
+                    <i class="fas fa-file me-2"></i>
+                    <div>
+                        <strong>${file.name}</strong>
+                        <br>
+                        <small class="text-muted">${formatFileSize(file.size)}</small>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-outline-danger ms-auto" onclick="removeFile('${type}', ${index})">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function validateFile(file) {
+            const maxSize = 5 * 1024 * 1024; // 5MB
+            const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'];
+            
+            if (file.size > maxSize) {
+                Utils.showToast('File size must be less than 5MB', 'error');
+                return false;
+            }
+            
+            if (!allowedTypes.includes(file.type)) {
+                Utils.showToast('Only PDF, JPG, and PNG files are allowed', 'error');
+                return false;
+            }
+            
+            return true;
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function removeFile(type, index = null) {
+            if (index !== null && uploadedFiles[type]) {
+                uploadedFiles[type].splice(index, 1);
+            } else {
+                delete uploadedFiles[type];
+            }
+            
+            const preview = document.getElementById(type + 'Preview');
+            if (uploadedFiles[type] && uploadedFiles[type].length > 0) {
+                handleMultipleFileUpload(uploadedFiles[type], type);
+            } else {
+                preview.innerHTML = '';
+            }
+        }
+
+        function setupFormSubmission() {
+            const form = document.getElementById('organizerApplicationForm');
+            
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                // Validate form
+                if (!validateForm()) return;
+                
+                // Show loading state
+                const submitBtn = document.getElementById('submitBtn');
+                const submitText = document.getElementById('submitText');
+                const submitSpinner = document.getElementById('submitSpinner');
+                
+                submitBtn.disabled = true;
+                submitText.textContent = 'Submitting...';
+                submitSpinner.style.display = 'inline-block';
+                
+                try {
+                    // Prepare form data
+                    const formData = new FormData(form);
+                    
+                    // Add files
+                    if (uploadedFiles.businessDoc) {
+                        formData.append('businessDocument', uploadedFiles.businessDoc);
+                    }
+                    
+                    if (uploadedFiles.additionalDoc && uploadedFiles.additionalDoc.length > 0) {
+                        uploadedFiles.additionalDoc.forEach(file => {
+                            formData.append('additionalDocuments[]', file);
+                        });
+                    }
+                    
+                    // Submit application
+                    const response = await api.submitOrganizerApplication(formData);
+                    
+                    Utils.showToast('Application submitted successfully! We\'ll review it within 2-3 business days.', 'success');
+                    
+                    // Redirect to dashboard after delay
+                    setTimeout(() => {
+                        window.location.href = '/dashboard';
+                    }, 3000);
+                    
+                } catch (error) {
+                    console.error('Error submitting application:', error);
+                    Utils.showToast('Failed to submit application. Please try again.', 'error');
+                } finally {
+                    // Reset button state
+                    submitBtn.disabled = false;
+                    submitText.textContent = 'Submit Application';
+                    submitSpinner.style.display = 'none';
+                }
+            });
+        }
+
+        function validateForm() {
+            const form = document.getElementById('organizerApplicationForm');
+            
+            // Check required fields
+            const requiredFields = form.querySelectorAll('[required]');
+            for (let field of requiredFields) {
+                if (!field.value.trim()) {
+                    Utils.showToast(`Please fill in ${field.name || 'all required fields'}`, 'warning');
+                    field.focus();
+                    return false;
+                }
+            }
+            
+            // Check business document
+            if (!uploadedFiles.businessDoc) {
+                Utils.showToast('Please upload your business registration document', 'warning');
+                return false;
+            }
+            
+            // Check checkboxes
+            const terms = document.getElementById('terms');
+            const accuracy = document.getElementById('accuracy');
+            
+            if (!terms.checked) {
+                Utils.showToast('Please accept the terms and conditions', 'warning');
+                return false;
+            }
+            
+            if (!accuracy.checked) {
+                Utils.showToast('Please certify that all information is accurate', 'warning');
+                return false;
+            }
+            
+            return true;
+        }
+
+        // Make removeFile function globally available
+        window.removeFile = removeFile;
+    </script>
+</body>
+</html>

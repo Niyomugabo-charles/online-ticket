@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Settings - EventTicketing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="dark-mode.css">
+    
+    <style>
+        .profile-container {
+            padding-top: 100px;
+            min-height: 100vh;
+            background: #f8f9fa;
+        }
+        
+        .profile-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 3rem;
+        }
+        
+        .profile-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .avatar-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .avatar-container {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .avatar-upload {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background: #667eea;
+            color: white;
+            border: 2px solid white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .avatar-upload:hover {
+            background: #764ba2;
+            transform: scale(1.1);
+        }
+        
+        .avatar-upload input {
+            display: none;
+        }
+        
+        .nav-tabs {
+            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 2rem;
+        }
+        
+        .nav-tabs .nav-link {
+            border: none;
+            color: #666;
+            font-weight: 500;
+            padding: 1rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: #667eea;
+            background: none;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .nav-tabs .nav-link:hover {
+            color: #667eea;
+        }
+        
+        .form-control, .form-select {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .save-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .save-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .danger-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .danger-btn:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(220, 53, 69, 0.3);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+        
+        .notification-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+        
+        .notification-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+        
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.25rem;
+        }
+        
+        .notification-icon.info {
+            background: #e3f2fd;
+            color: #2196f3;
+        }
+        
+        .notification-icon.success {
+            background: #e8f5e8;
+            color: #4caf50;
+        }
+        
+        .notification-icon.warning {
+            background: #fff3e0;
+            color: #ff9800;
+        }
+        
+        .notification-icon.error {
+            background: #ffebee;
+            color: #f44336;
+        }
+        
+        .notification-content {
+            flex: 1;
+        }
+        
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .notification-time {
+            font-size: 0.875rem;
+            color: #666;
+        }
+        
+        .preference-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .preference-item:last-child {
+            border-bottom: none;
+        }
+        
+        .form-switch {
+            transform: scale(1.2);
+        }
+        
+        .form-check-input:checked {
+            background-color: #667eea;
+            border-color: #667eea;
+        }
+        
+        .password-strength {
+            height: 5px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .password-strength::after {
+            content: '';
+            height: 100%;
+            width: 0%;
+            background: #dc3545;
+            transition: all 0.3s ease;
+        }
+        
+        .password-requirements {
+            margin-top: 10px;
+        }
+        
+        .requirement {
+            font-size: 0.875rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .requirement.met {
+            color: #28a745;
+        }
+        
+        .requirement i {
+            margin-right: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .profile-header {
+                padding: 2rem 0;
+            }
+            
+            .profile-card {
+                padding: 1.5rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-tabs .nav-link {
+                padding: 0.75rem 1rem;
+                font-size: 0.875rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="preloader"><div class="loader"><div class="loader-spinner"></div></div></div>
+    
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-ticket-alt brand-icon"></i>
+                <span class="brand-text">Event<span class="brand-highlight">Ticketing</span></span>
+            </a>
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/events">Events</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contact">Contact</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav" id="nav-links"></ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="profile-container">
+        <!-- Header -->
+        <div class="profile-header">
+            <div class="container text-center">
+                <h1 class="display-5 fw-bold mb-3" data-aos="fade-up">Profile Settings</h1>
+                <p class="lead" data-aos="fade-up" data-aos-delay="100">
+                    Manage your account settings and preferences
+                </p>
+            </div>
+        </div>
+        
+        <div class="container">
+            <div class="row">
+                <!-- Main Content -->
+                <div class="col-lg-8">
+                    <div class="profile-card" data-aos="fade-up">
+                        <!-- Avatar Section -->
+                        <div class="avatar-section">
+                            <div class="avatar-container">
+                                <img src="https://picsum.photos/seed/avatar/120/120" alt="Profile Avatar" class="avatar" id="avatarImage">
+                                <label class="avatar-upload">
+                                    <i class="fas fa-camera"></i>
+                                    <input type="file" id="avatarInput" accept="image/*">
+                                </label>
+                            </div>
+                            <h4 id="profileName">John Doe</h4>
+                            <p class="text-muted" id="profileEmail">john.doe@example.com</p>
+                        </div>
+                        
+                        <!-- Tabs -->
+                        <ul class="nav nav-tabs" id="profileTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="personal-tab" data-bs-toggle="tab" data-bs-target="#personal" type="button" role="tab">
+                                    Personal Information
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="security-tab" data-bs-toggle="tab" data-bs-target="#security" type="button" role="tab">
+                                    Security
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="notifications-tab" data-bs-toggle="tab" data-bs-target="#notifications" type="button" role="tab">
+                                    Notifications
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="preferences-tab" data-bs-toggle="tab" data-bs-target="#preferences" type="button" role="tab">
+                                    Preferences
+                                </button>
+                            </li>
+                        </ul>
+                        
+                        <!-- Tab Content -->
+                        <div class="tab-content" id="profileTabContent">
+                            <!-- Personal Information -->
+                            <div class="tab-pane fade show active" id="personal" role="tabpanel">
+                                <form id="personalForm">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="firstName" class="form-label">First Name *</label>
+                                            <input type="text" class="form-control" id="firstName" name="first_name" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="lastName" class="form-label">Last Name *</label>
+                                            <input type="text" class="form-control" id="lastName" name="last_name" required>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Email Address *</label>
+                                        <input type="email" class="form-control" id="email" name="email" required>
+                                        <div class="form-text">Email changes require verification</div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="phone" class="form-label">Phone Number</label>
+                                        <input type="tel" class="form-control" id="phone" name="phone">
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="bio" class="form-label">Bio</label>
+                                        <textarea class="form-control" id="bio" name="bio" rows="4" placeholder="Tell us about yourself..."></textarea>
+                                    </div>
+                                    
+                                    <button type="submit" class="save-btn">
+                                        <span id="personalSaveText">Save Changes</span>
+                                        <span id="personalSaveSpinner" class="spinner-border spinner-border-sm ms-2" style="display: none;"></span>
+                                    </button>
+                                </form>
+                            </div>
+                            
+                            <!-- Security -->
+                            <div class="tab-pane fade" id="security" role="tabpanel">
+                                <form id="securityForm">
+                                    <h5 class="mb-4">Change Password</h5>
+                                    
+                                    <div class="mb-3">
+                                        <label for="currentPassword" class="form-label">Current Password *</label>
+                                        <input type="password" class="form-control" id="currentPassword" name="current_password" required>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="newPassword" class="form-label">New Password *</label>
+                                        <input type="password" class="form-control" id="newPassword" name="new_password" required>
+                                        <div class="password-strength" id="passwordStrength"></div>
+                                        <div class="password-requirements" id="passwordRequirements">
+                                            <div class="requirement" id="req-length">
+                                                <i class="fas fa-times-circle"></i> At least 8 characters
+                                            </div>
+                                            <div class="requirement" id="req-uppercase">
+                                                <i class="fas fa-times-circle"></i> 1 uppercase letter
+                                            </div>
+                                            <div class="requirement" id="req-lowercase">
+                                                <i class="fas fa-times-circle"></i> 1 lowercase letter
+                                            </div>
+                                            <div class="requirement" id="req-number">
+                                                <i class="fas fa-times-circle"></i> 1 number
+                                            </div>
+                                            <div class="requirement" id="req-special">
+                                                <i class="fas fa-times-circle"></i> 1 special character
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="confirmPassword" class="form-label">Confirm New Password *</label>
+                                        <input type="password" class="form-control" id="confirmPassword" name="confirm_password" required>
+                                        <div class="invalid-feedback" id="confirmPasswordError">
+                                            Passwords do not match
+                                        </div>
+                                    </div>
+                                    
+                                    <button type="submit" class="save-btn">
+                                        <span id="securitySaveText">Update Password</span>
+                                        <span id="securitySaveSpinner" class="spinner-border spinner-border-sm ms-2" style="display: none;"></span>
+                                    </button>
+                                </form>
+                                
+                                <hr class="my-5">
+                                
+                                <h5 class="mb-4">Two-Factor Authentication</h5>
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div>
+                                        <h6 class="mb-1">2FA Status</h6>
+                                        <p class="text-muted mb-0">Add an extra layer of security to your account</p>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="twoFactorToggle">
+                                        <label class="form-check-label" for="twoFactorToggle"></label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Notifications -->
+                            <div class="tab-pane fade" id="notifications" role="tabpanel">
+                                <h5 class="mb-4">Recent Notifications</h5>
+                                <div id="notificationsList">
+                                    <!-- Notifications will be loaded here -->
+                                </div>
+                            </div>
+                            
+                            <!-- Preferences -->
+                            <div class="tab-pane fade" id="preferences" role="tabpanel">
+                                <form id="preferencesForm">
+                                    <h5 class="mb-4">Email Preferences</h5>
+                                    
+                                    <div class="preference-item">
+                                        <div>
+                                            <h6 class="mb-1">Event Updates</h6>
+                                            <p class="text-muted mb-0">Receive updates about events you're interested in</p>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="eventUpdates" checked>
+                                            <label class="form-check-label" for="eventUpdates"></label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="preference-item">
+                                        <div>
+                                            <h6 class="mb-1">Ticket Reminders</h6>
+                                            <p class="text-muted mb-0">Get reminders before your events</p>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="ticketReminders" checked>
+                                            <label class="form-check-label" for="ticketReminders"></label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="preference-item">
+                                        <div>
+                                            <h6 class="mb-1">Newsletter</h6>
+                                            <p class="text-muted mb-0">Weekly newsletter with featured events</p>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="newsletter">
+                                            <label class="form-check-label" for="newsletter"></label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="preference-item">
+                                        <div>
+                                            <h6 class="mb-1">Marketing Emails</h6>
+                                            <p class="text-muted mb-0">Promotional offers and discounts</p>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="marketingEmails">
+                                            <label class="form-check-label" for="marketingEmails"></label>
+                                        </div>
+                                    </div>
+                                    
+                                    <hr class="my-4">
+                                    
+                                    <h5 class="mb-4">Display Preferences</h5>
+                                    
+                                    <div class="preference-item">
+                                        <div>
+                                            <h6 class="mb-1">Dark Mode</h6>
+                                            <p class="text-muted mb-0">Use dark theme for the interface</p>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="darkMode">
+                                            <label class="form-check-label" for="darkMode"></label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="preference-item">
+                                        <div>
+                                            <h6 class="mb-1">Language</h6>
+                                            <p class="text-muted mb-0">Choose your preferred language</p>
+                                        </div>
+                                        <select class="form-select w-auto" id="language">
+                                            <option value="en" selected>English</option>
+                                            <option value="es">Español</option>
+                                            <option value="fr">Français</option>
+                                            <option value="de">Deutsch</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <button type="submit" class="save-btn">
+                                        <span id="preferencesSaveText">Save Preferences</span>
+                                        <span id="preferencesSaveSpinner" class="spinner-border spinner-border-sm ms-2" style="display: none;"></span>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sidebar -->
+                <div class="col-lg-4">
+                    <div class="profile-card" data-aos="fade-up" data-aos-delay="100">
+                        <h5 class="mb-4">Account Statistics</h5>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-number" id="eventsAttended">0</div>
+                                <div class="stat-label">Events Attended</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="ticketsPurchased">0</div>
+                                <div class="stat-label">Tickets Purchased</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="totalSpent">$0</div>
+                                <div class="stat-label">Total Spent</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="memberSince">0</div>
+                                <div class="stat-label">Member Since</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-card" data-aos="fade-up" data-aos-delay="200">
+                        <h5 class="mb-4">Quick Actions</h5>
+                        <div class="d-grid gap-2">
+                            <a href="/dashboard" class="btn btn-outline-primary">
+                                <i class="fas fa-tachometer-alt me-2"></i> My Dashboard
+                            </a>
+                            <a href="/events" class="btn btn-outline-primary">
+                                <i class="fas fa-calendar-alt me-2"></i> Browse Events
+                            </a>
+                            <a href="/tickets" class="btn btn-outline-primary">
+                                <i class="fas fa-ticket-alt me-2"></i> My Tickets
+                            </a>
+                            <button class="btn btn-outline-primary" onclick="exportData()">
+                                <i class="fas fa-download me-2"></i> Export Data
+                            </button>
+                            <button class="btn btn-outline-danger" onclick="deleteAccount()">
+                                <i class="fas fa-trash me-2"></i> Delete Account
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="api.js"></script>
+    <script src="auth.js"></script>
+    <script src="utils.js"></script>
+    <script src="router.js"></script>
+    <script src="js/navigation-enhancer.js"></script>
+    
+    <script>
+        let userData = null;
+        let passwordValidation = {
+            length: false,
+            uppercase: false,
+            lowercase: false,
+            number: false,
+            special: false
+        };
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!Auth.isAuthenticated()) {
+                Utils.showToast('Please login to access your profile', 'warning');
+                setTimeout(() => {
+                    window.location.href = `/login?redirect=${encodeURIComponent(window.location.href)}`;
+                }, 2000);
+                return;
+            }
+            
+            AOS.init({
+                duration: 800,
+                once: true
+            });
+            
+            Auth.updateNav();
+            loadUserProfile();
+            initializeForms();
+            loadNotifications();
+        });
+        
+        async function loadUserProfile() {
+            try {
+                userData = Auth.getUser();
+                if (userData) {
+                    updateProfileDisplay(userData);
+                    loadProfileStats();
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                Utils.showToast('Failed to load profile data', 'error');
+            }
+        }
+        
+        function updateProfileDisplay(user) {
+            document.getElementById('profileName').textContent = `${user.first_name} ${user.last_name}`;
+            document.getElementById('profileEmail').textContent = user.email;
+            
+            // Update form fields
+            document.getElementById('firstName').value = user.first_name || '';
+            document.getElementById('lastName').value = user.last_name || '';
+            document.getElementById('email').value = user.email || '';
+            document.getElementById('phone').value = user.phone || '';
+            document.getElementById('bio').value = user.bio || '';
+        }
+        
+        async function loadProfileStats() {
+            try {
+                // In a real implementation, this would fetch from API
+                const stats = {
+                    eventsAttended: 12,
+                    ticketsPurchased: 28,
+                    totalSpent: 1250,
+                    memberSince: 2023
+                };
+                
+                document.getElementById('eventsAttended').textContent = stats.eventsAttended;
+                document.getElementById('ticketsPurchased').textContent = stats.ticketsPurchased;
+                document.getElementById('totalSpent').textContent = Utils.formatCurrency(stats.totalSpent);
+                document.getElementById('memberSince').textContent = stats.memberSince;
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+        
+        function loadNotifications() {
+            // Mock notifications
+            const notifications = [
+                {
+                    id: 1,
+                    type: 'success',
+                    title: 'Ticket Purchase Confirmed',
+                    message: 'Your tickets for Summer Music Festival have been confirmed',
+                    time: '2 hours ago'
+                },
+                {
+                    id: 2,
+                    type: 'info',
+                    title: 'Event Reminder',
+                    message: 'Tech Conference 2025 starts tomorrow at 9:00 AM',
+                    time: '1 day ago'
+                },
+                {
+                    id: 3,
+                    type: 'warning',
+                    title: 'Payment Method Expiring',
+                    message: 'Your credit card expires next month',
+                    time: '3 days ago'
+                }
+            ];
+            
+            const container = document.getElementById('notificationsList');
+            container.innerHTML = notifications.map(notification => `
+                <div class="notification-item">
+                    <div class="notification-icon ${notification.type}">
+                        <i class="fas fa-${getNotificationIcon(notification.type)}"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-title">${notification.title}</div>
+                        <div class="notification-time">${notification.time}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function getNotificationIcon(type) {
+            const icons = {
+                success: 'check-circle',
+                info: 'info-circle',
+                warning: 'exclamation-triangle',
+                error: 'times-circle'
+            };
+            return icons[type] || 'info-circle';
+        }
+        
+        function initializeForms() {
+            // Personal form
+            document.getElementById('personalForm').addEventListener('submit', handlePersonalSubmit);
+            
+            // Security form
+            document.getElementById('securityForm').addEventListener('submit', handleSecuritySubmit);
+            
+            // Preferences form
+            document.getElementById('preferencesForm').addEventListener('submit', handlePreferencesSubmit);
+            
+            // Password validation
+            const newPasswordInput = document.getElementById('newPassword');
+            newPasswordInput.addEventListener('input', validatePassword);
+            
+            // Password match validation
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            confirmPasswordInput.addEventListener('input', validatePasswordMatch);
+            
+            // Avatar upload
+            document.getElementById('avatarInput').addEventListener('change', handleAvatarUpload);
+        }
+        
+        async function handlePersonalSubmit(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const personalData = {
+                first_name: formData.get('first_name'),
+                last_name: formData.get('last_name'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                bio: formData.get('bio')
+            };
+            
+            // Basic validation
+            if (!personalData.first_name || !personalData.last_name || !personalData.email) {
+                Utils.showToast('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(personalData.email)) {
+                Utils.showToast('Please enter a valid email address', 'error');
+                return;
+            }
+            
+            // Show loading state
+            showLoadingState('personal');
+            
+            try {
+                // In a real implementation, this would call the API
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                Utils.showToast('Profile updated successfully!', 'success');
+                
+                // Update user data
+                userData = { ...userData, ...personalData };
+                localStorage.setItem('user', JSON.stringify(userData));
+                updateProfileDisplay(userData);
+                
+            } catch (error) {
+                console.error('Profile update error:', error);
+                Utils.showToast('Failed to update profile', 'error');
+            } finally {
+                hideLoadingState('personal');
+            }
+        }
+        
+        async function handleSecuritySubmit(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const currentPassword = formData.get('current_password');
+            const newPassword = formData.get('new_password');
+            const confirmPassword = formData.get('confirm_password');
+            
+            // Validate passwords
+            if (!Object.values(passwordValidation).every(v => v)) {
+                Utils.showToast('Please ensure your new password meets all requirements', 'error');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                Utils.showToast('Passwords do not match', 'error');
+                return;
+            }
+            
+            // Show loading state
+            showLoadingState('security');
+            
+            try {
+                // In a real implementation, this would call the API
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                Utils.showToast('Password updated successfully!', 'success');
+                
+                // Reset form
+                e.target.reset();
+                resetPasswordValidation();
+                
+            } catch (error) {
+                console.error('Password update error:', error);
+                Utils.showToast('Failed to update password', 'error');
+            } finally {
+                hideLoadingState('security');
+            }
+        }
+        
+        async function handlePreferencesSubmit(e) {
+            e.preventDefault();
+            
+            // Show loading state
+            showLoadingState('preferences');
+            
+            try {
+                // In a real implementation, this would call the API
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                Utils.showToast('Preferences saved successfully!', 'success');
+                
+            } catch (error) {
+                console.error('Preferences update error:', error);
+                Utils.showToast('Failed to update preferences', 'error');
+            } finally {
+                hideLoadingState('preferences');
+            }
+        }
+        
+        function validatePassword() {
+            const password = document.getElementById('newPassword').value;
+            const strengthBar = document.getElementById('passwordStrength');
+            
+            // Check each requirement
+            passwordValidation.length = password.length >= 8;
+            passwordValidation.uppercase = /[A-Z]/.test(password);
+            passwordValidation.lowercase = /[a-z]/.test(password);
+            passwordValidation.number = /\d/.test(password);
+            passwordValidation.special = /[@$!%*?&]/.test(password);
+            
+            // Update requirement indicators
+            updateRequirement('req-length', passwordValidation.length);
+            updateRequirement('req-uppercase', passwordValidation.uppercase);
+            updateRequirement('req-lowercase', passwordValidation.lowercase);
+            updateRequirement('req-number', passwordValidation.number);
+            updateRequirement('req-special', passwordValidation.special);
+            
+            // Update password strength bar
+            const strength = Object.values(passwordValidation).filter(v => v).length;
+            const percentage = (strength / 5) * 100;
+            
+            if (strengthBar) {
+                strengthBar.style.width = percentage + '%';
+                strengthBar.style.backgroundColor = percentage <= 40 ? '#dc3545' : 
+                                                     percentage <= 60 ? '#ffc107' : 
+                                                     percentage <= 80 ? '#fd7e14' : '#28a745';
+            }
+            
+            // Validate password match
+            validatePasswordMatch();
+        }
+        
+        function validatePasswordMatch() {
+            const password = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const confirmInput = document.getElementById('confirmPassword');
+            const errorElement = document.getElementById('confirmPasswordError');
+            
+            if (confirmPassword && password !== confirmPassword) {
+                confirmInput.classList.add('is-invalid');
+                errorElement.style.display = 'block';
+                return false;
+            } else {
+                confirmInput.classList.remove('is-invalid');
+                errorElement.style.display = 'none';
+                return true;
+            }
+        }
+        
+        function updateRequirement(id, met) {
+            const element = document.getElementById(id);
+            const icon = element.querySelector('i');
+            
+            if (met) {
+                element.classList.add('met');
+                icon.classList.remove('fa-times-circle');
+                icon.classList.add('fa-check-circle');
+            } else {
+                element.classList.remove('met');
+                icon.classList.remove('fa-check-circle');
+                icon.classList.add('fa-times-circle');
+            }
+        }
+        
+        function resetPasswordValidation() {
+            const requirements = ['req-length', 'req-uppercase', 'req-lowercase', 'req-number', 'req-special'];
+            requirements.forEach(req => {
+                updateRequirement(req, false);
+            });
+            document.getElementById('passwordStrength').style.width = '0%';
+        }
+        
+        function handleAvatarUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('avatarImage').src = e.target.result;
+                    Utils.showToast('Avatar updated!', 'success');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        function showLoadingState(form) {
+            const btn = document.getElementById(`${form}Form`).querySelector('button[type="submit"]');
+            const text = document.getElementById(`${form}SaveText`);
+            const spinner = document.getElementById(`${form}SaveSpinner`);
+            
+            btn.disabled = true;
+            text.textContent = 'Saving...';
+            spinner.style.display = 'inline-block';
+        }
+        
+        function hideLoadingState(form) {
+            const btn = document.getElementById(`${form}Form`).querySelector('button[type="submit"]');
+            const text = document.getElementById(`${form}SaveText`);
+            const spinner = document.getElementById(`${form}SaveSpinner`);
+            
+            btn.disabled = false;
+            text.textContent = form === 'security' ? 'Update Password' : 'Save Changes';
+            spinner.style.display = 'none';
+        }
+        
+        function exportData() {
+            Utils.showToast('Data export feature coming soon!', 'info');
+        }
+        
+        function deleteAccount() {
+            if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                if (confirm('This will permanently delete all your data. Are you absolutely sure?')) {
+                    Utils.showToast('Account deletion feature coming soon!', 'info');
+                }
+            }
+        }
+    </script>
+</body>
+</html>

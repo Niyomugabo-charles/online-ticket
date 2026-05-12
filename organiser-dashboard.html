@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organiser Dashboard - EventTicketing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="ark-mode.css">
+</head>
+<body class="dashboard-layout">
+    <nav class="navbar navbar-expand-lg navbar-dark dashboard-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="/"><i class="fas fa-ticket-alt"></i> EventTicketing</a>
+            <div class="dashboard-user-info ms-auto">
+                <span class="me-3"><i class="fas fa-chart-line"></i> Organiser Portal</span>
+                <button class="btn btn-outline-light btn-sm" onclick="Auth.logout()">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        <!-- Stats Cards -->
+        <div class="dashboard-stats">
+            <div class="stat-card stat-card-vertical stagger-item">
+                <div class="stat-icon"><i class="fas fa-calendar-alt"></i></div>
+                <div class="stat-value" id="total-events">0</div>
+                <div class="stat-info">
+                    <h6 class="text-muted mb-1">Total Events</h6>
+                </div>
+            </div>
+            <div class="stat-card stat-card-vertical stagger-item">
+                <div class="stat-icon"><i class="fas fa-ticket-alt"></i></div>
+                <div class="stat-value" id="total-tickets">0</div>
+                <div class="stat-info">
+                    <h6 class="text-muted mb-1">Tickets Sold</h6>
+                </div>
+            </div>
+            <div class="stat-card stat-card-vertical stagger-item">
+                <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
+                <div class="stat-value" id="total-revenue">$0</div>
+                <div class="stat-info">
+                    <h6 class="text-muted mb-1">Total Revenue</h6>
+                </div>
+            </div>
+            <div class="stat-card stat-card-vertical stagger-item">
+                <div class="stat-icon"><i class="fas fa-users"></i></div>
+                <div class="stat-value" id="total-attendees">0</div>
+                <div class="stat-info">
+                    <h6 class="text-muted mb-1">Total Attendees</h6>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons and Navigation -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#createEventModal">
+                    <i class="fas fa-plus"></i> Create New Event
+                </button>
+                <button class="btn btn-outline-primary ms-2" onclick="location.reload()">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+            </div>
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-outline-primary active" onclick="switchView('events')">Events</button>
+                <button type="button" class="btn btn-outline-primary" onclick="switchView('analytics')">Analytics</button>
+                <button type="button" class="btn btn-outline-primary" onclick="switchView('revenue')">Revenue</button>
+            </div>
+        </div>
+
+        <!-- Dynamic Content Area -->
+        <div id="content-area">
+            <!-- Events Table (Default View) -->
+            <div id="events-view" class="data-table fade-in">
+                <div class="data-table-header">
+                    <h4 class="data-table-title">My Events</h4>
+                    <div class="d-flex gap-2">
+                        <select class="form-select w-auto" id="status-filter" onchange="filterEvents()">
+                            <option value="">All Status</option>
+                            <option value="draft">Draft</option>
+                            <option value="published">Published</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Event</th>
+                                <th>Date</th>
+                                <th>Tickets Sold</th>
+                                <th>Revenue</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="events-table-body">
+                            <tr><td colspan="6" class="text-center">Loading events...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Analytics View -->
+            <div id="analytics-view" class="data-table fade-in" style="display: none;">
+                <div class="data-table-header">
+                    <h4 class="data-table-title">Event Analytics</h4>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5>Sales Overview</h5>
+                                <canvas id="sales-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5>Event Performance</h5>
+                                <canvas id="performance-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5>Top Performing Events</h5>
+                                <div id="top-events-list"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Revenue View -->
+            <div id="revenue-view" class="data-table fade-in" style="display: none;">
+                <div class="data-table-header">
+                    <h4 class="data-table-title">Revenue Reports</h4>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5>Revenue Trends</h5>
+                                <canvas id="revenue-trend-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5>Revenue Summary</h5>
+                                <div class="revenue-summary">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Total Revenue:</span>
+                                        <strong id="revenue-total">$0</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>This Month:</span>
+                                        <strong id="revenue-month">$0</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span>Avg. per Event:</span>
+                                        <strong id="revenue-average">$0</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5>Revenue by Event</h5>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Event</th>
+                                                <th>Tickets Sold</th>
+                                                <th>Revenue</th>
+                                                <th>Profit Margin</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="revenue-table-body"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Event Modal -->
+    <div class="modal fade dashboard-modal" id="createEventModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create New Event</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="create-event-form">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label>Event Title</label>
+                                <input type="text" class="form-control" name="title" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Category</label>
+                                <select class="form-select" name="category_id" id="event-category" required></select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Description</label>
+                            <textarea class="form-control" name="description" rows="3"></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label>Venue Name</label>
+                                <input type="text" class="form-control" name="venue_name" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Venue Address</label>
+                                <input type="text" class="form-control" name="venue_address">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label>Event Date</label>
+                                <input type="date" class="form-control" name="event_date" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Event Time</label>
+                                <input type="time" class="form-control" name="event_time" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Ticket Categories</label>
+                            <div id="ticket-categories-container">
+                                <div class="ticket-category-row row mb-2">
+                                    <div class="col-4"><input type="text" class="form-control" placeholder="Category Name (e.g., VIP)"></div>
+                                    <div class="col-3"><input type="number" class="form-control" placeholder="Price"></div>
+                                    <div class="col-3"><input type="number" class="form-control" placeholder="Quantity"></div>
+                                    <div class="col-2"><button type="button" class="btn btn-danger btn-sm" onclick="removeTicketCategory(this)"><i class="fas fa-trash"></i></button></div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="addTicketCategory()">
+                                <i class="fas fa-plus"></i> Add Ticket Category
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="createEvent()">Create Event</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="api.js"></script>
+    <script src="auth.js"></script>
+    <script src="utils.js"></script>
+    
+    <script>
+        let myEvents = [];
+        let currentView = 'events';
+        let charts = {};
+        
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!Auth.isAuthenticated() || !Auth.isOrganiser()) {
+                window.location.href = '/login';
+                return;
+            }
+            
+            await loadCategories();
+            await loadEvents();
+        });
+        
+        async function loadCategories() {
+            try {
+                const data = await api.getCategories();
+                const select = document.getElementById('event-category');
+                data.categories.forEach(cat => {
+                    select.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
+                });
+            } catch (error) {
+                console.error('Error loading categories:', error);
+            }
+        }
+        
+        async function loadEvents() {
+            Utils.showLoading();
+            try {
+                const data = await api.getMyEvents();
+                myEvents = data.events || [];
+                updateStats();
+                renderEventsTable();
+            } catch (error) {
+                console.error('Error loading events:', error);
+            } finally {
+                Utils.hideLoading();
+            }
+        }
+        
+        function updateStats() {
+            const totalEvents = myEvents.length;
+            const totalTickets = myEvents.reduce((sum, e) => sum + (e.tickets_sold || 0), 0);
+            const totalRevenue = myEvents.reduce((sum, e) => sum + (e.revenue || 0), 0);
+            const totalAttendees = myEvents.reduce((sum, e) => sum + (e.attendees || 0), 0);
+            
+            document.getElementById('total-events').textContent = totalEvents;
+            document.getElementById('total-tickets').textContent = totalTickets;
+            document.getElementById('total-revenue').textContent = Utils.formatCurrency(totalRevenue);
+            document.getElementById('total-attendees').textContent = totalAttendees;
+        }
+        
+        function renderEventsTable() {
+            const tbody = document.getElementById('events-table-body');
+            if (!myEvents.length) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center">No events created yet</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = myEvents.map(event => `
+                <tr>
+                    <td><strong>${Utils.escapeHtml(event.title)}</strong><br><small>${Utils.escapeHtml(event.venue_name)}</small></td>
+                    <td>${Utils.formatDate(event.event_date)}<br><small>${event.event_time?.substring(0,5)}</small></td>
+                    <td>${event.tickets_sold || 0} / ${event.total_tickets || 0}</td>
+                    <td>${Utils.formatCurrency(event.revenue || 0)}</td>
+                    <td><span class="status-badge status-${event.status}">${event.status}</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary" onclick="viewEvent(${event.id})"><i class="fas fa-eye"></i></button>
+                        <button class="btn btn-sm btn-outline-success" onclick="publishEvent(${event.id})" ${event.status !== 'draft' ? 'disabled' : ''}><i class="fas fa-upload"></i></button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="cancelEvent(${event.id})"><i class="fas fa-ban"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        function addTicketCategory() {
+            const container = document.getElementById('ticket-categories-container');
+            const newRow = document.createElement('div');
+            newRow.className = 'ticket-category-row row mb-2';
+            newRow.innerHTML = `
+                <div class="col-4"><input type="text" class="form-control" placeholder="Category Name"></div>
+                <div class="col-3"><input type="number" class="form-control" placeholder="Price"></div>
+                <div class="col-3"><input type="number" class="form-control" placeholder="Quantity"></div>
+                <div class="col-2"><button type="button" class="btn btn-danger btn-sm" onclick="removeTicketCategory(this)"><i class="fas fa-trash"></i></button></div>
+            `;
+            container.appendChild(newRow);
+        }
+        
+        window.removeTicketCategory = (btn) => {
+            btn.closest('.ticket-category-row').remove();
+        };
+        
+        async function createEvent() {
+            const form = document.getElementById('create-event-form');
+            const formData = new FormData(form);
+            
+            const eventData = {
+                title: formData.get('title'),
+                category_id: formData.get('category_id'),
+                description: formData.get('description'),
+                venue_name: formData.get('venue_name'),
+                venue_address: formData.get('venue_address'),
+                event_date: formData.get('event_date'),
+                event_time: formData.get('event_time')
+            };
+            
+            Utils.showLoading();
+            try {
+                await api.createEvent(eventData);
+                Utils.showToast('Event created successfully!', 'success');
+                bootstrap.Modal.getInstance(document.getElementById('createEventModal')).hide();
+                form.reset();
+                await loadEvents();
+            } catch (error) {
+                Utils.showToast(error.message, 'error');
+            } finally {
+                Utils.hideLoading();
+            }
+        }
+        
+        window.viewEvent = (id) => {
+            window.open(`/event-detail.html?id=${id}`, '_blank');
+        };
+        
+        window.publishEvent = async (id) => {
+            if (confirm('Publish this event? It will become visible to the public.')) {
+                Utils.showLoading();
+                try {
+                    await api.publishEvent(id);
+                    Utils.showToast('Event published!', 'success');
+                    await loadEvents();
+                } catch (error) {
+                    Utils.showToast(error.message, 'error');
+                } finally {
+                    Utils.hideLoading();
+                }
+            }
+        };
+        
+        window.cancelEvent = async (id) => {
+            if (confirm('Cancel this event? All ticket holders will be refunded.')) {
+                Utils.showLoading();
+                try {
+                    await api.cancelEvent(id);
+                    Utils.showToast('Event cancelled', 'warning');
+                    await loadEvents();
+                } catch (error) {
+                    Utils.showToast(error.message, 'error');
+                } finally {
+                    Utils.hideLoading();
+                }
+            }
+        };
+        
+        // View switching functionality
+        window.switchView = (view) => {
+            // Update button states
+            document.querySelectorAll('.btn-group .btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Hide all views
+            document.getElementById('events-view').style.display = 'none';
+            document.getElementById('analytics-view').style.display = 'none';
+            document.getElementById('revenue-view').style.display = 'none';
+            
+            // Show selected view
+            document.getElementById(`${view}-view`).style.display = 'block';
+            currentView = view;
+            
+            // Load view-specific data
+            if (view === 'analytics') {
+                loadAnalytics();
+            } else if (view === 'revenue') {
+                loadRevenue();
+            }
+        };
+        
+        window.filterEvents = () => {
+            const status = document.getElementById('status-filter').value;
+            const filteredEvents = status ? myEvents.filter(e => e.status === status) : myEvents;
+            renderEventsTable(filteredEvents);
+        };
+        
+        async function loadAnalytics() {
+            Utils.showLoading();
+            try {
+                // Create sample analytics data
+                const salesData = generateSalesData();
+                const performanceData = generatePerformanceData();
+                
+                createSalesChart(salesData);
+                createPerformanceChart(performanceData);
+                loadTopEvents();
+            } catch (error) {
+                console.error('Error loading analytics:', error);
+            } finally {
+                Utils.hideLoading();
+            }
+        }
+        
+        async function loadRevenue() {
+            Utils.showLoading();
+            try {
+                const revenueData = generateRevenueData();
+                updateRevenueSummary(revenueData);
+                createRevenueTrendChart(revenueData);
+                renderRevenueTable(revenueData);
+            } catch (error) {
+                console.error('Error loading revenue:', error);
+            } finally {
+                Utils.hideLoading();
+            }
+        }
+        
+        function generateSalesData() {
+            return {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Tickets Sold',
+                    data: [65, 78, 90, 81, 96, 125],
+                    borderColor: '#6366f1',
+                    backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                    tension: 0.4
+                }]
+            };
+        }
+        
+        function generatePerformanceData() {
+            return {
+                labels: myEvents.slice(0, 5).map(e => e.title),
+                datasets: [{
+                    label: 'Attendance Rate',
+                    data: [85, 92, 78, 88, 95],
+                    backgroundColor: ['#6366f1', '#ec4899', '#06b6d4', '#f59e0b', '#10b981']
+                }]
+            };
+        }
+        
+        function generateRevenueData() {
+            const monthlyRevenue = [4500, 5200, 4800, 6100, 5800, 7200];
+            const totalRevenue = monthlyRevenue.reduce((a, b) => a + b, 0);
+            const currentMonth = monthlyRevenue[monthlyRevenue.length - 1];
+            const averageRevenue = totalRevenue / myEvents.length || 0;
+            
+            return {
+                monthly: monthlyRevenue,
+                total: totalRevenue,
+                currentMonth: currentMonth,
+                average: averageRevenue,
+                events: myEvents.map(e => ({
+                    title: e.title,
+                    ticketsSold: e.tickets_sold || 0,
+                    revenue: e.revenue || 0,
+                    profitMargin: Math.random() * 30 + 10 // Mock profit margin
+                }))
+            };
+        }
+        
+        function createSalesChart(data) {
+            const ctx = document.getElementById('sales-chart');
+            if (ctx && charts.sales) charts.sales.destroy();
+            
+            charts.sales = new Chart(ctx, {
+                type: 'line',
+                data: data,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+        
+        function createPerformanceChart(data) {
+            const ctx = document.getElementById('performance-chart');
+            if (ctx && charts.performance) charts.performance.destroy();
+            
+            charts.performance = new Chart(ctx, {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+        
+        function createRevenueTrendChart(data) {
+            const ctx = document.getElementById('revenue-trend-chart');
+            if (ctx && charts.revenue) charts.revenue.destroy();
+            
+            charts.revenue = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Revenue',
+                        data: data.monthly,
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+        
+        function updateRevenueSummary(data) {
+            document.getElementById('revenue-total').textContent = Utils.formatCurrency(data.total);
+            document.getElementById('revenue-month').textContent = Utils.formatCurrency(data.currentMonth);
+            document.getElementById('revenue-average').textContent = Utils.formatCurrency(data.average);
+        }
+        
+        function renderRevenueTable(data) {
+            const tbody = document.getElementById('revenue-table-body');
+            tbody.innerHTML = data.events.map(event => `
+                <tr>
+                    <td>${Utils.escapeHtml(event.title)}</td>
+                    <td>${event.ticketsSold}</td>
+                    <td>${Utils.formatCurrency(event.revenue)}</td>
+                    <td>
+                        <div class="progress" style="height: 20px;">
+                            <div class="progress-bar bg-success" style="width: ${event.profitMargin}%">
+                                ${event.profitMargin.toFixed(1)}%
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        function loadTopEvents() {
+            const container = document.getElementById('top-events-list');
+            const topEvents = myEvents
+                .sort((a, b) => (b.revenue || 0) - (a.revenue || 0))
+                .slice(0, 5);
+            
+            container.innerHTML = topEvents.map((event, index) => `
+                <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
+                    <div>
+                        <h6 class="mb-1">${index + 1}. ${Utils.escapeHtml(event.title)}</h6>
+                        <small class="text-muted">${event.tickets_sold || 0} tickets sold</small>
+                    </div>
+                    <div class="text-end">
+                        <h6 class="mb-0">${Utils.formatCurrency(event.revenue || 0)}</h6>
+                        <small class="text-muted">Revenue</small>
+                    </div>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - EventTicketing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="dark-mode.css">
+</head>
+<body class="dashboard-layout">
+    <nav class="navbar navbar-expand-lg navbar-dark dashboard-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="/"><i class="fas fa-ticket-alt"></i> EventTicketing</a>
+            <div class="dashboard-user-info ms-auto">
+                <span class="me-3"><i class="fas fa-crown text-warning"></i> Admin Portal</span>
+                <button class="btn btn-outline-light btn-sm" onclick="Auth.logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid py-4">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 mb-4">
+                <div class="dashboard-sidebar">
+                    <div class="nav flex-column">
+                        <a class="nav-link active" data-tab="dashboard" href="#">
+                            <i class="fas fa-chart-line"></i> Dashboard
+                        </a>
+                        <a class="nav-link" data-tab="users" href="#">
+                            <i class="fas fa-users"></i> Users
+                        </a>
+                        <a class="nav-link" data-tab="organisers" href="#">
+                            <i class="fas fa-building"></i> Organisers
+                        </a>
+                        <a class="nav-link" data-tab="events" href="#">
+                            <i class="fas fa-calendar-alt"></i> Events
+                        </a>
+                        <a class="nav-link" data-tab="applications" href="#">
+                            <i class="fas fa-file-alt"></i> Applications
+                        </a>
+                        <a class="nav-link" data-tab="reports" href="#">
+                            <i class="fas fa-chart-bar"></i> Reports
+                        </a>
+                        <a class="nav-link" data-tab="settings" href="#">
+                            <i class="fas fa-cog"></i> Settings
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10">
+                <div id="dashboard-content">
+                    <!-- Dynamic content loads here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Detail Modal -->
+    <div class="modal fade dashboard-modal" id="userModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">User Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="userModalBody">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Review Modal -->
+    <div class="modal fade dashboard-modal" id="applicationModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <h5 class="modal-title">Review Organiser Application</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="applicationModalBody">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="rejectApplication()">Reject</button>
+                    <button type="button" class="btn btn-success" onclick="approveApplication()">Approve</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/utils.js"></script>
+    
+    <script>
+        let currentTab = 'dashboard';
+        let usersData = [];
+        let eventsData = [];
+        let applicationsData = [];
+        let currentPage = 1;
+        let itemsPerPage = 10;
+        let charts = {};
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!Auth.isAuthenticated() || !Auth.isAdmin()) {
+                window.location.href = '/login';
+                return;
+            }
+            
+            await loadDashboard();
+            initSidebarEvents();
+        });
+
+        function initSidebarEvents() {
+            document.querySelectorAll('[data-tab]').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    document.querySelectorAll('[data-tab]').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentTab = btn.dataset.tab;
+                    currentPage = 1;
+                    
+                    switch(currentTab) {
+                        case 'dashboard':
+                            await loadDashboard();
+                            break;
+                        case 'users':
+                            await loadUsers();
+                            break;
+                        case 'organisers':
+                            await loadOrganisers();
+                            break;
+                        case 'events':
+                            await loadEvents();
+                            break;
+                        case 'applications':
+                            await loadApplications();
+                            break;
+                        case 'reports':
+                            await loadReports();
+                            break;
+                        case 'settings':
+                            await loadSettings();
+                            break;
+                    }
+                });
+            });
+        }
+
+        async function loadDashboard() {
+            Utils.showLoading();
+            const container = document.getElementById('dashboard-content');
+            container.innerHTML = `
+            <div class="dashboard-stats">
+                <div class="stat-card stat-card-horizontal stagger-item" onclick="switchToTab('users')">
+                    <div class="stat-info">
+                        <h6 class="text-muted mb-1">Total Users</h6>
+                        <h3 class="mb-0" id="total-users">-</h3>
+                    </div>
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                </div>
+                <div class="stat-card stat-card-horizontal stagger-item" onclick="switchToTab('organisers')">
+                    <div class="stat-info">
+                        <h6 class="text-muted mb-1">Organisers</h6>
+                        <h3 class="mb-0" id="total-organisers">-</h3>
+                    </div>
+                    <div class="stat-icon"><i class="fas fa-building"></i></div>
+                </div>
+                <div class="stat-card stat-card-horizontal stagger-item" onclick="switchToTab('events')">
+                    <div class="stat-info">
+                        <h6 class="text-muted mb-1">Total Events</h6>
+                        <h3 class="mb-0" id="total-events">-</h3>
+                    </div>
+                    <div class="stat-icon"><i class="fas fa-calendar"></i></div>
+                </div>
+                <div class="stat-card stat-card-horizontal stagger-item">
+                    <div class="stat-info">
+                        <h6 class="text-muted mb-1">Total Revenue</h6>
+                        <h3 class="mb-0" id="total-revenue">-</h3>
+                    </div>
+                    <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
+                </div>
+            </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="chart-container fade-in">
+                            <h5>Revenue Overview</h5>
+                            <canvas id="revenue-chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="chart-container fade-in">
+                            <h5>Events by Category</h5>
+                            <canvas id="category-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chart-container fade-in">
+                    <h5>Recent Activity</h5>
+                    <div id="recent-activities" class="list-group">
+                        <div class="list-group-item">Loading activities...</div>
+                    </div>
+                </div>
+            `;
+            
+            try {
+                const stats = await api.getDashboardStats();
+                document.getElementById('total-users').textContent = stats.total_users || 0;
+                document.getElementById('total-organisers').textContent = stats.total_organisers || 0;
+                document.getElementById('total-events').textContent = stats.total_events || 0;
+                document.getElementById('total-revenue').textContent = Utils.formatCurrency(stats.total_revenue || 0);
+                
+                createRevenueChart(stats.monthly_revenue);
+                createCategoryChart(stats.category_distribution);
+                loadRecentActivities();
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+            } finally {
+                Utils.hideLoading();
+            }
+        }
+
+        function createRevenueChart(data) {
+            const ctx = document.getElementById('revenue-chart')?.getContext('2d');
+            if (!ctx) return;
+            
+            if (charts.revenue) charts.revenue.destroy();
+            
+            charts.revenue = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data?.map(d => d.month) || ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Revenue',
+                        data: data?.map(d => d.revenue) || [0, 0, 0, 0, 0, 0],
+                        borderColor: '#6366f1',
+                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+
+        function createCategoryChart(data) {
+            const ctx = document.getElementById('category-chart')?.getContext('2d');
+            if (!ctx) return;
+            
+            if (charts.category) charts.category.destroy();
+            
+            charts.category = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: data?.map(d => d.category) || ['Music', 'Sports', 'Theatre'],
+                    datasets: [{
+                        data: data?.map(d => d.count) || [30, 25, 20],
+                        backgroundColor: ['#6366f1', '#ec4899', '#06b6d4', '#f59e0b', '#10b981']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+
+        async function loadRecentActivities() {
+            try {
+                const activities = await api.getRecentActivities();
+                const container = document.getElementById('recent-activities');
+                container.innerHTML = activities.map(act => `
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas ${getActivityIcon(act.type)} text-primary me-2"></i>
+                            <strong>${act.user}</strong> ${act.action}
+                        </div>
+                        <small class="text-muted">${Utils.formatDate(act.created_at)}</small>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading activities:', error);
+            }
+        }
+
+        function getActivityIcon(type) {
+            const icons = {
+                user: 'fa-user',
+                event: 'fa-calendar',
+                order: 'fa-shopping-cart',
+                application: 'fa-file-alt'
+            };
+            return icons[type] || 'fa-bell';
+        }
+
+        async function loadUsers() {
+            Utils.showLoading();
+            const container = document.getElementById('dashboard-content');
+            container.innerHTML = `
+                <div class="data-table fade-in">
+                    <div class="data-table-header">
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <h4 class="data-table-title">User Management</h4>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="search-box">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" class="form-control" id="user-search" placeholder="Search users...">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Joined</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-table-body">
+                                <tr><td colspan="7" class="text-center">Loading users...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="p-3 border-top">
+                        <div id="users-pagination" class="pagination-custom"></div>
+                    </div>
+                </div>
+            `;
+            
+            await fetchUsers();
+            document.getElementById('user-search').addEventListener('input', Utils.debounce(fetchUsers, 300));
+            Utils.hideLoading();
+        }
+
+        async function fetchUsers() {
+            const search = document.getElementById('user-search')?.value || '';
+            try {
+                const data = await api.getUsers({ search, page: currentPage, limit: itemsPerPage });
+                usersData = data.users || [];
+                renderUsersTable();
+                renderPagination('users', data.total_pages);
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            }
+        }
+
+        function renderUsersTable() {
+            const tbody = document.getElementById('users-table-body');
+            if (!usersData.length) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center">No users found</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = usersData.map(user => `
+                <tr>
+                    <td>${user.id}</td>
+                    <td>${user.first_name} ${user.last_name}</td>
+                    <td>${user.email}</td>
+                    <td><span class="badge bg-${getRoleColor(user.role)}">${user.role}</span></td>
+                    <td><span class="status-badge status-${user.is_suspended ? 'suspended' : 'active'}">${user.is_suspended ? 'Suspended' : 'Active'}</span></td>
+                    <td>${Utils.formatDate(user.created_at)}</td>
+                    <td>
+                        <i class="fas fa-eye action-btn text-info" onclick="viewUser(${user.id})" title="View"></i>
+                        <i class="fas ${user.is_suspended ? 'fa-play-circle' : 'fa-ban'} action-btn text-warning" onclick="toggleUserStatus(${user.id})" title="${user.is_suspended ? 'Activate' : 'Suspend'}"></i>
+                        <i class="fas fa-trash action-btn text-danger" onclick="deleteUser(${user.id})" title="Delete"></i>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function getRoleColor(role) {
+            const colors = { admin: 'danger', organiser: 'warning', attendee: 'info' };
+            return colors[role] || 'secondary';
+        }
+
+        async function loadOrganisers() {
+            Utils.showLoading();
+            const container = document.getElementById('dashboard-content');
+            container.innerHTML = `
+                <div class="data-table fade-in">
+                    <div class="data-table-header">
+                        <h4 class="data-table-title">Organiser Management</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr><th>ID</th><th>Organisation</th><th>Owner</th><th>Email</th><th>Status</th><th>Events</th><th>Revenue</th><th>Actions</th></tr>
+                            </thead>
+                            <tbody id="organisers-table-body">
+                                <tr><td colspan="8" class="text-center">Loading organisers...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+            
+            try {
+                const organisers = await api.getOrganisers();
+                renderOrganisersTable(organisers);
+            } catch (error) {
+                console.error('Error loading organisers:', error);
+            } finally {
+                Utils.hideLoading();
+            }
+        }
+
+        function renderOrganisersTable(organisers) {
+            const tbody = document.getElementById('organisers-table-body');
+            if (!organisers.length) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center">No organisers found</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = organisers.map(org => `
+                <tr>
+                    <td>${org.id}</td>
+                    <td><strong>${org.organisation_name}</strong></td>
+                    <td>${org.owner_name}</td>
+                    <td>${org.email}</td>
+                    <td><span class="status-badge status-${org.status}">${org.status}</span></td>
+                    <td>${org.event_count || 0}</td>
+                    <td>${Utils.formatCurrency(org.revenue || 0)}</td>
+                    <td>
+                        <i class="fas fa-eye action-btn text-info" onclick="viewOrganiser(${org.id})"></i>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function loadEvents() {
+            Utils.showLoading();
+            const container = document.getElementById('dashboard-content');
+            container.innerHTML = `
+                <div class="data-table fade-in">
+                    <div class="data-table-header">
+                        <div class="row align-items-center">
+                            <div class="col-md-6"><h4 class="data-table-title">Event Management</h4></div>
+                            <div class="col-md-6"><div class="search-box"><i class="fas fa-search"></i><input type="text" class="form-control" id="event-search" placeholder="Search events..."></div></div>
+                        </div>
+                    </div>
+                    <div class="filter-bar p-3 border-bottom">
+                        <select id="event-status-filter" class="form-select w-auto"><option value="">All Status</option><option value="draft">Draft</option><option value="published">Published</option><option value="cancelled">Cancelled</option></select>
+                        <select id="event-category-filter" class="form-select w-auto"><option value="">All Categories</option></select>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover"><thead><tr><th>ID</th><th>Event</th><th>Organiser</th><th>Date</th><th>Tickets Sold</th><th>Revenue</th><th>Status</th><th>Actions</th></tr></thead><tbody id="events-table-body"><tr><td colspan="8" class="text-center">Loading events...</td></tr></tbody></table>
+                    </div>
+                    <div class="p-3 border-top"><div id="events-pagination" class="pagination-custom"></div></div>
+                </div>
+            `;
+            
+            await loadCategoriesForFilter();
+            document.getElementById('event-search').addEventListener('input', Utils.debounce(fetchEvents, 300));
+            document.getElementById('event-status-filter').addEventListener('change', fetchEvents);
+            document.getElementById('event-category-filter').addEventListener('change', fetchEvents);
+            await fetchEvents();
+            Utils.hideLoading();
+        }
+
+        async function loadCategoriesForFilter() {
+            try {
+                const cats = await api.getCategories();
+                const select = document.getElementById('event-category-filter');
+                cats.categories.forEach(cat => {
+                    select.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
+                });
+            } catch (error) {}
+        }
+
+        async function fetchEvents() {
+            const search = document.getElementById('event-search')?.value || '';
+            const status = document.getElementById('event-status-filter')?.value || '';
+            const category = document.getElementById('event-category-filter')?.value || '';
+            
+            try {
+                const data = await api.getAdminEvents({ search, status, category, page: currentPage });
+                eventsData = data.events || [];
+                renderEventsTable();
+                renderPagination('events', data.total_pages);
+            } catch (error) {}
+        }
+
+        function renderEventsTable() {
+            const tbody = document.getElementById('events-table-body');
+            if (!eventsData.length) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center">No events found</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = eventsData.map(event => `
+                <tr>
+                    <td>${event.id}</td>
+                    <td><strong>${Utils.escapeHtml(event.title)}</strong><br><small>${Utils.escapeHtml(event.venue_name)}</small></td>
+                    <td>${event.organiser_name}</td>
+                    <td>${Utils.formatDate(event.event_date)}</td>
+                    <td>${event.tickets_sold || 0}</td>
+                    <td>${Utils.formatCurrency(event.revenue || 0)}</td>
+                    <td><span class="status-badge status-${event.status}">${event.status}</span></td>
+                    <td>
+                        <i class="fas fa-eye action-btn text-info" onclick="viewEventDetail(${event.id})"></i>
+                        <i class="fas fa-ban action-btn text-danger" onclick="cancelEvent(${event.id})" title="Cancel Event"></i>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function loadApplications() {
+            Utils.showLoading();
+            const container = document.getElementById('dashboard-content');
+            container.innerHTML = `
+                <div class="data-table fade-in">
+                    <div class="data-table-header">
+                        <h4 class="data-table-title">Organiser Applications</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead><tr><th>ID</th><th>Organisation</th><th>Applicant</th><th>Email</th><th>Description</th><th>Submitted</th><th>Status</th><th>Actions</th></tr></thead>
+                            <tbody id="applications-table-body"><tr><td colspan="8" class="text-center">Loading applications...</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+            
+            try {
+                const applications = await api.getOrganiserApplications();
+                applicationsData = applications;
+                renderApplicationsTable();
+            } catch (error) {} finally { Utils.hideLoading(); }
+        }
+
+        function renderApplicationsTable() {
+            const tbody = document.getElementById('applications-table-body');
+            if (!applicationsData.length) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center">No pending applications</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = applicationsData.map(app => `
+                <tr>
+                    <td>${app.id}</td>
+                    <td><strong>${app.organisation_name}</strong></td>
+                    <td>${app.first_name} ${app.last_name}</td>
+                    <td>${app.email}</td>
+                    <td>${app.description?.substring(0, 50) || '-'}...</td>
+                    <td>${Utils.formatDate(app.created_at)}</td>
+                    <td><span class="status-badge status-${app.status}">${app.status}</span></td>
+                    <td>${app.status === 'pending' ? `<i class="fas fa-check-circle action-btn text-success" onclick="reviewApplication(${app.id})"></i>` : '-'}</td>
+                </tr>
+            `).join('');
+        }
+
+        function loadReports() {
+            const container = document.getElementById('dashboard-content');
+            container.innerHTML = `
+                <div class="chart-container fade-in">
+                    <h5>Sales Report</h5>
+                    <canvas id="sales-chart"></canvas>
+                </div>
+                <div class="chart-container fade-in">
+                    <h5>Top Selling Events</h5>
+                    <div id="top-events-list" class="list-group"></div>
+                </div>
+            `;
+            createSalesChart();
+            loadTopEvents();
+        }
+
+        function createSalesChart() {
+            const ctx = document.getElementById('sales-chart')?.getContext('2d');
+            if (!ctx) return;
+            new Chart(ctx, {
+                type: 'bar',
+                data: { labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'], datasets: [{ label: 'Sales', data: [12, 19, 15, 27, 22, 34], backgroundColor: '#6366f1' }] },
+                options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+            });
+        }
+
+        function loadTopEvents() {
+            const container = document.getElementById('top-events-list');
+            container.innerHTML = '<div class="list-group-item">Loading...</div>';
+        }
+
+        function loadSettings() {
+            const container = document.getElementById('dashboard-content');
+            container.innerHTML = `
+                <div class="chart-container">
+                    <h5>System Settings</h5>
+                    <form id="settings-form">
+                        <div class="mb-3"><label>Service Fee Percentage</label><input type="number" class="form-control" id="service-fee" value="5" step="0.5"></div>
+                        <div class="mb-3"><label>Reservation Timeout (minutes)</label><input type="number" class="form-control" id="reservation-timeout" value="15"></div>
+                        <div class="mb-3"><label>Max Tickets Per Order</label><input type="number" class="form-control" id="max-tickets" value="10"></div>
+                        <button type="submit" class="btn btn-primary">Save Settings</button>
+                    </form>
+                </div>
+            `;
+        }
+
+        function renderPagination(type, totalPages) {
+            const container = document.getElementById(`${type}-pagination`);
+            if (!container || totalPages <= 1) { if(container) container.innerHTML = ''; return; }
+            
+            let html = '';
+            if (currentPage > 1) html += `<button class="page-btn" onclick="changePage(${type}, ${currentPage - 1})"><i class="fas fa-chevron-left"></i></button>`;
+            for (let i = 1; i <= Math.min(totalPages, 5); i++) html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="changePage('${type}', ${i})">${i}</button>`;
+            if (currentPage < totalPages) html += `<button class="page-btn" onclick="changePage(${type}, ${currentPage + 1})"><i class="fas fa-chevron-right"></i></button>`;
+            container.innerHTML = html;
+        }
+
+        function changePage(type, page) {
+            currentPage = page;
+            if (type === 'users') fetchUsers();
+            else if (type === 'events') fetchEvents();
+        }
+
+        function switchToTab(tab) { document.querySelector(`[data-tab="${tab}"]`).click(); }
+        function viewUser(id) { Utils.showToast(`View user ${id}`, 'info'); }
+        function toggleUserStatus(id) { Utils.showToast(`Toggle user ${id} status`, 'warning'); }
+        function deleteUser(id) { if(confirm('Delete this user?')) Utils.showToast(`User ${id} deleted`, 'success'); }
+        function viewOrganiser(id) { Utils.showToast(`View organiser ${id}`, 'info'); }
+        function viewEventDetail(id) { window.open(`/event-detail.html?id=${id}`, '_blank'); }
+        function cancelEvent(id) { if(confirm('Cancel this event?')) Utils.showToast(`Event ${id} cancelled`, 'warning'); }
+        
+        function reviewApplication(id) {
+            const app = applicationsData.find(a => a.id == id);
+            document.getElementById('applicationModalBody').innerHTML = `<p><strong>Organisation:</strong> ${app.organisation_name}</p><p><strong>Description:</strong> ${app.description}</p><p><strong>Website:</strong> ${app.website || '-'}</p>`;
+            currentApplicationId = id;
+            new bootstrap.Modal(document.getElementById('applicationModal')).show();
+        }
+        
+        let currentApplicationId = null;
+        function approveApplication() {
+            Utils.showToast('Application approved', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('applicationModal')).hide();
+            loadApplications();
+        }
+        function rejectApplication() {
+            Utils.showToast('Application rejected', 'warning');
+            bootstrap.Modal.getInstance(document.getElementById('applicationModal')).hide();
+            loadApplications();
+        }
+    </script>
+</body>
+</html>

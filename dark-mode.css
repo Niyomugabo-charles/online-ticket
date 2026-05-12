@@ -1,0 +1,129 @@
+/* ============================================
+   DARK MODE STYLES
+   ============================================ */
+
+body.dark-mode {
+    --dark: #f8fafc;
+    --darker: #e2e8f0;
+    --light: #0f172a;
+    --white: #1e293b;
+    --gray: #94a3b8;
+    --gray-light: #64748b;
+    --gray-lighter: #334155;
+}
+
+body.dark-mode {
+    background-color: var(--light);
+    color: var(--dark);
+}
+
+/* Dark Mode Toggle Button */
+.dark-mode-toggle {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 45px;
+    height: 45px;
+    background: var(--gradient-primary);
+    border: none;
+    border-radius: 50%;
+    color: var(--white);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: var(--z-high);
+    box-shadow: var(--shadow-lg);
+    transition: all var(--transition-base);
+}
+
+.dark-mode-toggle:hover {
+    transform: scale(1.1);
+}
+
+/* Dark Mode Card Styles */
+body.dark-mode .card,
+body.dark-mode .event-card,
+body.dark-mode .category-card,
+body.dark-mode .step-card,
+body.dark-mode .testimonial-card,
+body.dark-mode .stat-card,
+body.dark-mode .auth-card,
+body.dark-mode .ticket-card {
+    background: var(--white);
+    color: var(--dark);
+}
+
+body.dark-mode .form-control,
+body.dark-mode .form-select {
+    background-color: var(--white);
+    border-color: var(--gray-lighter);
+    color: var(--dark);
+}
+
+body.dark-mode .form-control:focus {
+    border-color: var(--primary);
+}
+
+body.dark-mode .card-header,
+body.dark-mode .card-footer {
+    background: var(--white);
+    border-color: var(--gray-lighter);
+}
+
+body.dark-mode .hero-card {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .hero-card-content h4 {
+    color: var(--white);
+}
+
+body.dark-mode .filter-sidebar,
+body.dark-mode .filters-sidebar {
+    background: var(--white);
+}
+
+body.dark-mode .dashboard-nav {
+    background: var(--white);
+}
+
+body.dark-mode .dashboard-nav .nav-link {
+    color: var(--dark);
+}
+
+body.dark-mode .table {
+    color: var(--dark);
+}
+
+body.dark-mode .table-light {
+    background: var(--gray-lighter);
+}
+
+body.dark-mode .modal-content {
+    background: var(--white);
+}
+
+body.dark-mode .modal-header {
+    background: var(--gradient-primary);
+    color: var(--white);
+}
+
+/* Dark Mode Switch Animation */
+.dark-mode-toggle i {
+    transition: transform 0.3s ease;
+}
+
+.dark-mode-toggle:hover i {
+    transform: rotate(30deg);
+}
+
+/* Dark Mode Transitions */
+body,
+.card,
+.event-card,
+.category-card,
+.form-control,
+.btn {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
